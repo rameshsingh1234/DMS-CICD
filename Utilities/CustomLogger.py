@@ -1,14 +1,14 @@
 import logging
-from os import remove
-from os.path import exists
-
-"""Function returns the logger object"""
-
+import os
 
 def setup_logger(logger_name, log_file, level=logging.WARNING):
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+
     # Erase log if already exists
-    if exists(log_file):
-        remove(log_file)
+    if os.path.exists(log_file):
+        os.remove(log_file)
+
     # Configure log file
     logger = logging.getLogger(logger_name)
     formatter = logging.Formatter('%(asctime)s :%(levelname)s : %(name)s :%(message)s')
@@ -20,4 +20,3 @@ def setup_logger(logger_name, log_file, level=logging.WARNING):
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
     return logger
-
