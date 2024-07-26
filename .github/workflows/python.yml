@@ -30,7 +30,7 @@ jobs:
         run: ls
 
       - name: Change directory
-        run: cd /home/runner/work/SoundBox_APP/
+        run: cd /home/runner/work/Sound_Box_CICD/
 
       - name: Run Pytest
        # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
