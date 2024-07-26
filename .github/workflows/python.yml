@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -48,38 +48,38 @@ jobs:
 
 
 
-      - name: Attach the Test Report To gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Report
-          path: reports/Pytest_report.html
+#      - name: Attach the Test Report To gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Report
+#          path: reports/Pytest_report.html
+#
+#      - name: Attach the Zap Report To Gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Report
+#          path: report_html.html
+#
+#      - name: test directory
+#        run : pwd
+#
+#      - name : test
+#        run : ls
 
-      - name: Attach the Zap Report To Gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Report
-          path: report_html.html
-
-      - name: test directory
-        run : pwd
-
-      - name : test
-        run : ls
-
-      - name: Attach the Test Logs To Gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Log
-          path: Logs/test.log
+#      - name: Attach the Test Logs To Gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Log
+#          path: Logs/test.log
 
 
-      - name: Configure Gmail and Send Email
-        env:
-          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
-          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
-          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
-        run: |
-          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#      - name: Configure Gmail and Send Email
+#        env:
+#          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
+#          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
+#          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
+#        run: |
+#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
 
 
 
