@@ -32,6 +32,9 @@ jobs:
       - name: Change directory
         run: cd /home/runner/work/Sound_Box_CICD/
 
+      - name: directory
+        run: pwd
+
       - name: Run Pytest
        # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
         run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
