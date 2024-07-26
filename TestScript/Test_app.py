@@ -8,13 +8,15 @@ from Utilities.readproperties import ReadConfig
 from Resuable.auth_token import get_auth_token
 from Utilities.CustomLogger import setup_logger
 
-# Get the log directory and CSV file path from the configuration
+# Get the log directory and ensure it exists
 log_directory = ReadConfig.get_logs_directory()
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
 log_file_path = os.path.join(log_directory, "API_TEST.log")
 
 # Set up the logger
 logger = setup_logger('API_TEST_LOG', log_file_path, level=logging.DEBUG)
-
 if logger is None:
     raise SystemExit("Logger setup failed. Exiting...")
 
@@ -30,11 +32,8 @@ test_params = [pytest.param(data, id=data['Testcase ID']) for data in csv_data]
 # Get the authorization token
 auth_token = get_auth_token()
 
-expired_token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvSS14anVfTDRQSm"
-
 # Get the base URL from configuration
 base_url = ReadConfig.get_base_url()
-
 
 @pytest.mark.parametrize("test_data", test_params)
 def test_api(test_data):
