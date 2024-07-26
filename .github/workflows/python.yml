@@ -2,7 +2,7 @@ name: API Testing
 on:
   push:
     branches:
-      - master
+      - main
 #test2
 jobs:
   zap_scan:
