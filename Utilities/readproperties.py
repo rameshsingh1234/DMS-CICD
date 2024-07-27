@@ -37,15 +37,12 @@ class ReadConfig:
         config = ReadConfig.get_config()
         try:
             csv_file_path = config['DEFAULT']['CSVFilePath']
-            csv_file_path_abs = os.path.abspath(os.path.join(os.path.dirname(ReadConfig.get_config_path()), csv_file_path))
-            print(f"CSV file path: {csv_file_path_abs}")
-            return csv_file_path_abs
+            return os.path.abspath(os.path.join(os.path.dirname(ReadConfig.get_config_path()), csv_file_path))
         except KeyError:
             raise KeyError("CSVFilePath key is missing in the configuration file")
 
     @staticmethod
     def read_csv(file_path):
-        print(f"Reading CSV file from: {file_path}")
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"CSV file not found: {file_path}")
         with open(file_path, mode='r') as csvfile:
@@ -93,3 +90,15 @@ class ReadConfig:
             return config['authorization']['auth_payload']
         except KeyError:
             raise KeyError("auth_payload key is missing in the authorization section of the configuration file")
+
+if __name__ == "__main__":
+    try:
+        logs_directory = ReadConfig.get_logs_directory()
+        csv_file_path = ReadConfig.get_csv_file_path()
+        csv_data = ReadConfig.read_csv(csv_file_path)
+        print(f"Logs Directory: {logs_directory}")
+        print(f"CSV Data: {csv_data}")
+    except FileNotFoundError as e:
+        print(e)
+    except KeyError as e:
+        print(e)

@@ -4,21 +4,16 @@ import pytest
 import json
 from Resuable.api_requests import make_request
 from Resuable.assertion import assert_status_code, assert_response_keys, assert_response_body
+from Utilities import CustomLogger
 from Utilities.readproperties import ReadConfig
 from Resuable.auth_token import get_auth_token
-from Utilities.CustomLogger import setup_logger
 
 # Get the log directory and ensure it exists
 log_directory = ReadConfig.get_logs_directory()
-if not os.path.exists(log_directory):
-    os.makedirs(log_directory)
-
 log_file_path = os.path.join(log_directory, "API_TEST.log")
 
 # Set up the logger
-logger = setup_logger('API_TEST_LOG', log_file_path, level=logging.DEBUG)
-if logger is None:
-    raise SystemExit("Logger setup failed. Exiting...")
+logger = CustomLogger.setup_logger('API_TEST_LOG', log_file_path, level=logging.DEBUG)
 
 # Get the CSV file path from the configuration
 csv_file_path = ReadConfig.get_csv_file_path()
