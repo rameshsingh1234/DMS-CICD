@@ -2,7 +2,6 @@ import configparser
 import csv
 import os
 
-
 class ReadConfig:
     @staticmethod
     def get_config_path():
@@ -38,8 +37,7 @@ class ReadConfig:
         config = ReadConfig.get_config()
         try:
             csv_file_path = config['DEFAULT']['CSVFilePath']
-            csv_file_path_abs = os.path.abspath(
-                os.path.join(os.path.dirname(ReadConfig.get_config_path()), csv_file_path))
+            csv_file_path_abs = os.path.abspath(os.path.join(os.path.dirname(ReadConfig.get_config_path()), csv_file_path))
             print(f"CSV file path: {csv_file_path_abs}")
             return csv_file_path_abs
         except KeyError:
