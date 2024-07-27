@@ -32,11 +32,6 @@ jobs:
 #      - name: Change directory
 #        run: cd /home/runner/work/Sound_Box_CICD/
 
-      - name: Run Pytest
-       # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
-        run: pytest ./TestScript/Test_app.py --html-report=./Pytest_report.html
-
-
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
         with:
@@ -45,6 +40,13 @@ jobs:
           format: openapi
           target: 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
           cmd_options: '-J report_json.json -w report_md.md -r report_html.html -a'
+
+      - name: Run Pytest
+       # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
+        run: pytest ./TestScript/Test_app.py --html-report=./Pytest_report.html
+
+
+
 
 
 
