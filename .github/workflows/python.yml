@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install pytest-html
 
       - name: Verify directory structure
         run: |
@@ -38,7 +39,7 @@ jobs:
         run: mkdir -p Logs
 
       - name: Run Pytest
-        run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/Pytest_report.html
+        run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=reports/Pytest_report.html --self-contained-html
 
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
