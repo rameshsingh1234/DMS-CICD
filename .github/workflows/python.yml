@@ -2,7 +2,7 @@ name: API Testing
 on:
   push:
     branches:
-      - master
+      - main
 #test1
 jobs:
   zap_scan:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v4
