@@ -34,7 +34,9 @@ jobs:
 
       - name: Run Pytest
        # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
-        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
+        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html
+        # pytest --html=report.html --self-contained-html
+
 
 
       - name: ZAP Scan
