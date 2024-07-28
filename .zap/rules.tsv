@@ -1,3 +1,5 @@
+10011	IGNORE	(Cookie Without Secure Flag)
+10015	IGNORE	(Incomplete or No Cache-control and Pragma HTTP Header Set)
 # Rule to include specific URLs or paths
 INCLUDE_URL
 
