@@ -38,13 +38,14 @@ jobs:
 
       - name: Merge JSON Reports
         run: |
-          echo '[' > zap_reports/merged_report.json
+          echo '[' > zap_reports/temp_merged_report.json
           for file in zap_reports/*.json; do
-            cat $file >> zap_reports/merged_report.json
-            echo ',' >> zap_reports/merged_report.json
+            cat $file >> zap_reports/temp_merged_report.json
+            echo ',' >> zap_reports/temp_merged_report.json
           done
-          sed -i '$ s/,$//' zap_reports/merged_report.json
-          echo ']' >> zap_reports/merged_report.json
+          sed -i '$ s/,$//' zap_reports/temp_merged_report.json
+          echo ']' >> zap_reports/temp_merged_report.json
+          mv zap_reports/temp_merged_report.json zap_reports/merged_report.json
 
       - name: Show Merged Report
         run: |
