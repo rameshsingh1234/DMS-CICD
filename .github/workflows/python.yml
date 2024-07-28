@@ -42,7 +42,7 @@ jobs:
           $(for file in zap_reports/*.json; do cat $file; echo ','; done | sed '$ s/,$//')
           ]' > zap_reports/merged_report.json
 
-      - name: Debug: Show Merged Report
+      - name: Show Merged Report
         run: cat zap_reports/merged_report.json
 
       - name: Generate Consolidated Report
