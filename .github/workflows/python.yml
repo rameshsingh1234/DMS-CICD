@@ -60,7 +60,7 @@ jobs:
 
       - name: Change to zap_reports directory
         run: |
-          cd /home/runner/work/Sound_Box_CICD/Sound_Box_CICD/zap_reports
+          cd /home/runner/work/Sound_Box_CICD/Sound_Box_CICD/zap_reports/zap_reports
           ls
       - name: ls
         run: ls
