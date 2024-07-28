@@ -5,29 +5,29 @@ on:
       - main
 #test1
 jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
-    name: Test and Scan the APIs
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Test directory
-        run: pwd
-
-      - name: List files
-        run: ls
+#  zap_scan:
+#    runs-on: ubuntu-latest
+#    name: Test and Scan the APIs
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          ref: main
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.9
+#
+#      - name: Install dependencies
+#        run: |
+#          pip install -r requirements.txt
+#
+#      - name: Test directory
+#        run: pwd
+#
+#      - name: List files
+#        run: ls
 
 #      - name: Change directory
 #        run: cd /home/runner/work/Sound_Box_CICD/
@@ -37,54 +37,63 @@ jobs:
 #        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
 
 
-      - name: ZAP Scan
-        uses: zaproxy/action-api-scan@v0.7.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
-          format: openapi
-          target: 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
-          rules_file_name: 'zap/rules.tsv'
-          cmd_options: '-a'
+      zap_scan:
+        runs-on: ubuntu-latest
+        name: Scan the webapplication
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v2
+            with:
+              ref: main
+
+          - name: ZAP Scan
+            uses: zaproxy/action-api-scan@v0.7.0
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+              format: openapi
+              target: 'https://www.zaproxy.org/'
+              rules_file_name: '.zap/rules.tsv'
+              cmd_options: '-a'
 
 
 
-      - name: Attach the Test Report To gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Report
-          path: reports/Pytest_report.html
-
-      - name: Attach the Zap Report To Gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Report
-          path: report_html.html
-
-      - name: test directory
-        run : pwd
-
-      - name : test
-        run : ls
-
-      - name: Attach the Test Logs To Gmail
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Log
-          path: Logs/test.log
-
-
-      - name: Configure Gmail and Send Email
-        env:
-          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
-          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
-          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
-        run: |
-          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
-
-
-
-
+#      - name: Attach the Test Report To gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Report
+#          path: reports/Pytest_report.html
+#
+#      - name: Attach the Zap Report To Gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Report
+#          path: report_html.html
+#
+#      - name: test directory
+#        run : pwd
+#
+#      - name : test
+#        run : ls
+#
+#      - name: Attach the Test Logs To Gmail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Test Log
+#          path: Logs/test.log
+#
+#
+#      - name: Configure Gmail and Send Email
+#        env:
+#          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
+#          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
+#          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
+#        run: |
+#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#
+#
+#
+#
 
 
 
@@ -119,7 +128,7 @@ jobs:
 #      - name: Upload ZAP HTML Report
 #        uses: actions/upload-artifact@v2
 #        with:
-#          name: zap-report-html
+#          name: .zap-report-html
 #          path: report_html.html
 #
 #      - name: Configure Gmail and Send Email

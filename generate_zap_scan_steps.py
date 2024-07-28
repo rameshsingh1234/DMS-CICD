@@ -23,7 +23,7 @@ with open('Testdata/endpoint.csv', newline='', encoding='utf-8-sig') as csvfile:
                 'docker_name': 'ghcr.io/zaproxy/zaproxy:stable',
                 'format': 'openapi',
                 'target': url,
-                'cmd_options': '-J /zap/report_json.json -w /zap/report_md.md -r /zap/report_html.html -a'
+                'cmd_options': '-J /.zap/report_json.json -w /.zap/report_md.md -r /.zap/report_html.html -a'
             }
         })
 
@@ -42,7 +42,7 @@ for step in steps:
     cmd_options = step['with']['cmd_options']
 
     print(f"Running {name}")
-    command = f"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} -f {format} {cmd_options}"
+    command = f"docker run --rm -v $(pwd):/.zap/wrk/:rw -t {docker_name} .zap-api-scan.py -t {target} -f {format} {cmd_options}"
     try:
         subprocess.run(command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
@@ -51,7 +51,7 @@ for step in steps:
         print("Error:", e.stderr)
 
     # Verify that the report files are created
-    report_files = ["/zap/report_json.json", "/zap/report_md.md", "/zap/report_html.html"]
+    report_files = ["/.zap/report_json.json", "/.zap/report_md.md", "/.zap/report_html.html"]
     for report_file in report_files:
         if not os.path.exists(report_file):
             print(f"Report file {report_file} was not created.")
