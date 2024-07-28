@@ -43,9 +43,9 @@ jobs:
     strategy:
       matrix:
         target:
-          - 'https://www.zaproxy.org/'
-          - 'https://another-target-url.com/'
-          - 'https://yet-another-target-url.com/'
+          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets'
+          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
+          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/accounts/get'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
