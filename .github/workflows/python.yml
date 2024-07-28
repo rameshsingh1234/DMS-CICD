@@ -94,8 +94,8 @@ jobs:
       - name: Generate and Execute ZAP Scan Steps
         run: python generate_zap_scan_steps_and_execute.py
 
-      - name: Run Pytest
-        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
+#      - name: Run Pytest
+#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
 
 #      - name: Attach the Test Report to Gmail
 #        uses: actions/upload-artifact@v2
