@@ -1,10 +1,9 @@
 name: API Testing
-
 on:
   push:
     branches:
       - main
-
+#test1
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -24,48 +23,181 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Set up environment
-        run: |
-          echo "TARGETS=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/preferences https://another-target-url.com/api" >> $GITHUB_ENV
+      - name: Test directory
+        run: pwd
 
-      - name: Run ZAP Scans and Collect Reports
-        run: |
-          mkdir -p zap_reports
-          chmod 777 zap_reports
-          for target in $TARGETS; do
-            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -t $target -f openapi -J /zap/wrk/report_$(echo $target | md5sum | cut -d' ' -f1).json -r /zap/wrk/report_$(echo $target | md5sum | cut -d' ' -f1).html || true"
-          done
+      - name: List files
+        run: ls
 
-      - name: Merge JSON Reports
-        run: |
-          echo '[' > zap_reports/temp_merged_report.json
-          for file in zap_reports/*.json; do
-            cat $file >> zap_reports/temp_merged_report.json
-            echo ',' >> zap_reports/temp_merged_report.json
-          done
-          sed -i '$ s/,$//' zap_reports/temp_merged_report.json
-          echo ']' >> zap_reports/temp_merged_report.json
-          mv zap_reports/temp_merged_report.json zap_reports/merged_report.json
+      - name: Change directory
+        run: cd /home/runner/work/SoundBox_CICD/
 
-      - name: Show Merged Report
-        run: |
-          cat zap_reports/merged_report.json
+#      - name: Run Pytest
+#       # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
+#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
 
-      - name: Generate Consolidated Report
-        run: |
-          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/final_report.json -w /zap/wrk/final_report.md -r /zap/wrk/final_report.html -I /zap/wrk/merged_report.json || true"
 
-      - name: Show ZAP Docker Logs
-        run: |
-          docker logs $(docker ps -lq)
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.7.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+          format: openapi
+          target: 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
+          cmd_options: '-J report_json.json -w report_md.md -r report_html.html -a'
 
-      - name: List zap_reports directory
-        run: |
-          ls -al zap_reports
 
-      - name: Upload ZAP HTML Report
+
+      - name: Attach the Test Report To gmail
         uses: actions/upload-artifact@v2
         with:
-          name: zap-report-html
-          path: zap_reports/final_report.html
-          if-no-files-found: warn
+          name: Test Report
+          path: reports/Pytest_report.html
+
+      - name: Attach the Zap Report To Gmail
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Report
+          path: report_html.html
+
+      - name: test directory
+        run : pwd
+
+      - name : test
+        run : ls
+
+      - name: Attach the Test Logs To Gmail
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Log
+          path: Logs/test.log
+
+
+      - name: Configure Gmail and Send Email
+        env:
+          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
+          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
+          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
+        run: |
+          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #
+        #    - name: Send Email Report
+        #      uses: actions/upload-artifact@v2
+        #      with:
+        #        name: Test Report
+        #        path: reports/report.html
+
+
+
+
+#      - name: Upload ZAP HTML Report
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: zap-report-html
+#          path: report_html.html
+#
+#      - name: Configure Gmail and Send Email
+#        env:
+#          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+#          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+#          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+#        run: |
+#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#
+
+
+
+
+
+
+
+
+
+
+
+#name: Test and Scan
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v3
+#    - name: Setup Python
+#      uses: actions/setup-python@v4
+#      with:
+#        python-version: 3.9  # Replace 'x' with your desired Python version
+#
+#    - name: Install dependencies
+#      run: |
+#        pip install -r requirements.txt
+#
+#    - name: test directory
+#      run : pwd
+#
+#    - name : test
+#      run : ls
+#
+#    - name : test1
+#      run : cd /home/runner/work/SoundBox_APP/
+#
+#
+##test
+#
+#    - name: Run Pytest
+#
+#
+#      run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
+#
+#
+#
+##test
+#
+#    - name: Send Email Report
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: Test Report
+#        path: reports/report.html
+#
+#
+#
+#    - name: Configure Gmail and Send Email
+#      env:
+#        GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
+#        GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
+#
+#        RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
+#
+#      run: |
+#        python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#
