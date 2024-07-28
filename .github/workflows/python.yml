@@ -25,12 +25,12 @@ jobs:
         id: sanitize
         run: echo "report_name=$(echo ${{ matrix.target }} | sed 's/[^a-zA-Z0-9]/_/g').html" >> $GITHUB_ENV
 
-      - name: Create Report Directory
-        run: mkdir -p zap_reports
-
       - name: Run ZAP Docker container
         run: |
-          docker run --rm -v $(pwd)/zap_reports:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t ${{ matrix.target }} -f openapi -r /zap/wrk/${{ env.report_name }}
+          docker run --rm -v $(pwd):/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable sh -c "
+            mkdir -p /zap/wrk/zap_reports && \
+            zap-api-scan.py -t ${{ matrix.target }} -f openapi -r /zap/wrk/zap_reports/${{ env.report_name }}
+          "
 
       - name: Upload Reports
         uses: actions/upload-artifact@v2
