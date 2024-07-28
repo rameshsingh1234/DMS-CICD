@@ -2,6 +2,7 @@
 import csv
 import json
 import subprocess
+import os
 
 steps = []
 
@@ -48,4 +49,12 @@ for step in steps:
         print(f"ZAP scan for {target} failed with exit code {e.returncode}")
         print("Output:", e.output)
         print("Error:", e.stderr)
-        # Handle non-zero exit codes gracefully if needed
+
+    # Verify that the report files are created
+    report_files = ["/zap/report_json.json", "/zap/report_md.md", "/zap/report_html.html"]
+    for report_file in report_files:
+        if not os.path.exists(report_file):
+            print(f"Report file {report_file} was not created.")
+        else:
+            print(f"Report file {report_file} exists.")
+

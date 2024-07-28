@@ -45,6 +45,7 @@ jobs:
           echo "import csv" > generate_zap_scan_steps_and_execute.py
           echo "import json" >> generate_zap_scan_steps_and_execute.py
           echo "import subprocess" >> generate_zap_scan_steps_and_execute.py
+          echo "import os" >> generate_zap_scan_steps_and_execute.py
           echo "" >> generate_zap_scan_steps_and_execute.py
           echo "steps = []" >> generate_zap_scan_steps_and_execute.py
           echo "" >> generate_zap_scan_steps_and_execute.py
@@ -90,20 +91,7 @@ jobs:
           echo "        print(f\"ZAP scan for {target} failed with exit code {e.returncode}\")" >> generate_zap_scan_steps_and_execute.py
           echo "        print(\"Output:\", e.output)" >> generate_zap_scan_steps_and_execute.py
           echo "        print(\"Error:\", e.stderr)" >> generate_zap_scan_steps_and_execute.py
-
-      - name: Generate and Execute ZAP Scan Steps
-        run: python generate_zap_scan_steps_and_execute.py
-
-#      - name: Run Pytest
-#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
-
-#      - name: Attach the Test Report to Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Test Report
-#          path: reports/Pytest_report.html
-#
-#      - name: Attach the ZAP Report to Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name
+          echo "" >> generate_zap_scan_steps_and_execute.py
+          echo "    report_files = ['/zap/report_json.json', '/zap/report_md.md', '/zap/report_html.html']" >> generate_zap_scan_steps_and_execute.py
+          echo "    for report_file in report_files:" >> generate_zap_scan_steps_and_execute.py
+          echo "        if not os
