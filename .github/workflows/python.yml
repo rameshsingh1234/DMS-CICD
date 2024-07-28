@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-#test
+
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -24,12 +24,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Test directory
-        run: pwd
-
-      - name: List files
-        run: ls
-
       - name: Set up environment
         run: |
           echo "TARGETS=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/preferences https://another-target-url.com/api" >> $GITHUB_ENV
@@ -39,7 +33,7 @@ jobs:
           mkdir -p zap_reports
           chmod 777 zap_reports
           for target in $TARGETS; do
-            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "mkdir -p /zap/wrk/zap_reports && zap-api-scan.py -t $target -f openapi -J /zap/wrk/zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json || true"
+            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -t $target -f openapi -J /zap/wrk/zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json || true"
           done
 
       - name: Merge JSON Reports
@@ -52,21 +46,12 @@ jobs:
         run: |
           docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/zap_reports/final_report.json -w /zap/wrk/zap_reports/final_report.md -r /zap/wrk/zap_reports/final_report.html -I /zap/wrk/zap_reports/merged_report.json || true"
 
-      - name: ls
-        run: ls
-
-      - name: pwd
-        run: pwd
-
-      - name: Change to zap_reports directory
-        run: |
-          cd /home/runner/work/Sound_Box_CICD/Sound_Box_CICD/zap_reports/zap_reports
-          ls
-      - name: ls
-        run: ls
+      - name: List zap_reports directory
+        run: ls -al zap_reports
 
       - name: Upload ZAP HTML Report
         uses: actions/upload-artifact@v2
         with:
           name: zap-report-html
           path: zap_reports/final_report.html
+          if-no-files-found: warn
