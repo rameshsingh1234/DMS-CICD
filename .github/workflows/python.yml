@@ -21,33 +21,16 @@ jobs:
         with:
           ref: main
 
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Create Report Directory
-        run: mkdir -p zap_reports
-
-      - name: Start ZAP
-        run: docker-compose up -d
-
-      - name: Wait for ZAP to start
-        run: |
-          until curl -s http://localhost:8080; do
-            echo "Waiting for ZAP to start..."
-            sleep 5
-          done
-
       - name: Sanitize URL and Set Filename
         id: sanitize
         run: echo "report_name=$(echo ${{ matrix.target }} | sed 's/[^a-zA-Z0-9]/_/g').html" >> $GITHUB_ENV
 
-      - name: Run ZAP Scan
-        run: docker exec zap zap-api-scan.py -t ${{ matrix.target }} -f openapi -r /zap/wrk/${{ env.report_name }}
+      - name: Create Report Directory
+        run: mkdir -p zap_reports
 
-      - name: Stop ZAP
-        run: docker-compose down
+      - name: Run ZAP Docker container
+        run: |
+          docker run --rm -v $(pwd)/zap_reports:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t ${{ matrix.target }} -f openapi -r /zap/wrk/${{ env.report_name }}
 
       - name: Upload Reports
         uses: actions/upload-artifact@v2
