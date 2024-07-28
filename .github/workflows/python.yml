@@ -21,9 +21,6 @@ jobs:
         with:
           ref: main
 
-      - name: Create Report Directory
-        run: mkdir -p zap_reports
-
       - name: Sanitize URL and Set Filename
         id: sanitize
         run: echo "report_name=$(echo ${{ matrix.target }} | sed 's/[^a-zA-Z0-9]/_/g').html" >> $GITHUB_ENV
@@ -40,7 +37,9 @@ jobs:
           cmd_options: '-r /zap/wrk/${{ env.report_name }}'
 
       - name: Copy Reports to Workspace
-        run: cp /zap/wrk/*.html zap_reports/
+        run: |
+          mkdir -p zap_reports
+          cp /zap/wrk/*.html zap_reports/
 
       - name: Upload Reports
         uses: actions/upload-artifact@v2
@@ -96,7 +95,7 @@ jobs:
 #          pip install -r requirements.txt
 #
 #      - name: Run Pytest
-#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
+#        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html
 #
 #      - name: Upload Pytest Report
 #        uses: actions/upload-artifact@v2
