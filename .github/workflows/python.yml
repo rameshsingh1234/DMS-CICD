@@ -39,7 +39,7 @@ jobs:
           mkdir -p zap_reports
           chmod 777 zap_reports
           for target in $TARGETS; do
-            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t $target -f openapi -J zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json
+            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "mkdir -p /zap/wrk/zap_reports && zap-api-scan.py -t $target -f openapi -J /zap/wrk/zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json"
           done
 
       - name: Merge JSON Reports
@@ -50,7 +50,7 @@ jobs:
 
       - name: Generate Consolidated Report
         run: |
-          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -J zap_reports/final_report.json -w zap_reports/final_report.md -r zap_reports/final_report.html -I zap_reports/merged_report.json
+          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -J /zap/wrk/zap_reports/final_report.json -w /zap/wrk/zap_reports/final_report.md -r /zap/wrk/zap_reports/final_report.html -I /zap/wrk/zap_reports/merged_report.json
 
       - name: Upload ZAP HTML Report
         uses: actions/upload-artifact@v2
