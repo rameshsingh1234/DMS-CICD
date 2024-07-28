@@ -21,6 +21,9 @@ jobs:
         with:
           ref: main
 
+      - name: Create Report Directory
+        run: mkdir -p ./zap_reports
+
       - name: ZAP Scan
         id: zap_scan
         uses: zaproxy/action-api-scan@v0.7.0
@@ -30,13 +33,13 @@ jobs:
           format: openapi
           target: ${{ matrix.target }}
           rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a -r report-${{ matrix.target }}.html'
+          cmd_options: '-a -r ./zap_reports/report-${{ matrix.target }}.html'
 
       - name: Upload Reports
         uses: actions/upload-artifact@v2
         with:
           name: ZAP-Reports
-          path: report-*.html
+          path: ./zap_reports/report-*.html
 
   merge_reports:
     runs-on: ubuntu-latest
