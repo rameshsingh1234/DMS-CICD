@@ -23,42 +23,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Test directory
-        run: pwd
-
-      - name: List files
-        run: ls
-
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Read Endpoints from CSV and Generate ZAP Scan Steps
-        id: generate_steps
-        run: |
-          import csv
-          import json
-          
-          steps = []
-          
-          with open('Testdata/endpoints.csv') as csvfile:
-
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-              url = row['url']
-              steps.append({
-                  'name': f"ZAP Scan {url}",
-                  'uses': 'zaproxy/action-api-scan@v0.7.0',
-                  'with': {
-                      'token': '${{ secrets.GITHUB_TOKEN }}',
-                      'docker_name': 'ghcr.io/zaproxy/zaproxy:stable',
-                      'format': 'openapi',
-                      'target': url,
-                      'cmd_options': '-J report_json.json -w report_md.md -r report_html.html -a'
-                  }
-              })
-          
-          with open('dynamic_steps.json', 'w') as f:
-            json.dump(steps, f)
+      - name: Generate ZAP Scan Steps
+        run: python generate_zap_scan_steps.py
 
       - name: Run Dynamic ZAP Scan Steps
         run: |
@@ -71,7 +40,7 @@ jobs:
             format=$(echo $step | jq -r '.with.format')
             target=$(echo $step | jq -r '.with.target')
             cmd_options=$(echo $step | jq -r '.with.cmd_options')
-          
+
             echo "Running $name"
             echo "uses: $uses"
             echo "with:"
@@ -80,7 +49,7 @@ jobs:
             echo "  format: $format"
             echo "  target: $target"
             echo "  cmd_options: $cmd_options"
-          
+
             - name: $name
               uses: $uses
               with:
