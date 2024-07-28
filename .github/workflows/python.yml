@@ -26,6 +26,20 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
+      - name: Verify Testdata Directory
+        run: |
+          if [ -d "Testdata" ]; then
+            echo "Testdata directory exists."
+          else
+            echo "Testdata directory does not exist."
+          fi
+
+      - name: List Contents of Testdata Directory
+        run: |
+          if [ -d "Testdata" ]; then
+            ls Testdata
+          fi
+
       - name: Create generate_zap_scan_steps.py
         run: |
           echo "import csv" > generate_zap_scan_steps.py
