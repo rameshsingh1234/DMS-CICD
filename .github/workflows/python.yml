@@ -53,6 +53,7 @@ jobs:
           ref: main
 
       - name: ZAP Scan
+        id: zap_scan
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +61,41 @@ jobs:
           format: openapi
           target: ${{ matrix.target }}
           rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
+          cmd_options: '-a -r report-${{ matrix.target }}.html'
+
+      - name: Upload Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: ZAP-Reports
+          path: report-*.html
+
+    merge_reports:
+      runs-on: ubuntu-latest
+      needs: zap_scan
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Download Reports
+          uses: actions/download-artifact@v2
+          with:
+            name: ZAP-Reports
+            path: ./zap_reports
+
+        - name: Merge Reports
+          run: |
+            echo "<html><body>" > merged-report.html
+            for report in ./zap_reports/*.html; do
+              echo "<h2>Report: $report</h2>" >> merged-report.html
+              cat "$report" >> merged-report.html
+            done
+            echo "</body></html>" >> merged-report.html
+
+        - name: Upload Merged Report
+          uses: actions/upload-artifact@v2
+          with:
+            name: Merged-ZAP-Report
+            path: merged-report.html
 
 
 
