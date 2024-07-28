@@ -33,7 +33,7 @@ jobs:
           mkdir -p zap_reports
           chmod 777 zap_reports
           for target in $TARGETS; do
-            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -t $target -f openapi -J /zap/wrk/zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json || true"
+            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -t $target -f openapi -J /zap/wrk/report_$(echo $target | md5sum | cut -d' ' -f1).json -r /zap/wrk/report_$(echo $target | md5sum | cut -d' ' -f1).html || true"
           done
 
       - name: Merge JSON Reports
@@ -42,30 +42,9 @@ jobs:
           $(for file in zap_reports/*.json; do cat $file; echo ','; done | sed '$ s/,$//')
           ]' > zap_reports/merged_report.json
 
-      - name: Install zap-cli
-        run: |
-          pip install zap-cli
-
-      - name: Generate HTML Reports
-        run: |
-          mkdir -p zap_html_reports
-          chmod 777 zap_html_reports
-          for report in zap_reports/*.json; do
-            zap-cli --zap-url http://localhost:8080 --zap-apikey '' report -f json -o $report -F html > zap_html_reports/$(basename ${report%.json}).html || true
-          done
-
-      - name: Upload ZAP HTML Reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: zap-html-reports
-          path: zap_html_reports
-
-
-
-
       - name: Generate Consolidated Report
         run: |
-          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/zap_reports/final_report.json -w /zap/wrk/zap_reports/final_report.md -r /zap/wrk/zap_reports/final_report.html -I /zap/wrk/zap_reports/merged_report.json || true"
+          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/final_report.json -w /zap/wrk/final_report.md -r /zap/wrk/final_report.html -I /zap/wrk/merged_report.json || true"
 
       - name: List zap_reports directory
         run: ls -al zap_reports
