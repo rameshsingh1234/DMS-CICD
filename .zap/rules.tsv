@@ -4,7 +4,8 @@
 
 # Rule to include specific URLs or paths
 INCLUDE_URL
-
+https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/preferences
+https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/accounts/get
 # Rule to adjust attack strength
 ATTACK_STRENGTH	LOW
 
