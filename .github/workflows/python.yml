@@ -34,8 +34,9 @@ jobs:
 
       - name: Run Pytest
        # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
-        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html
+        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html --self-contained-html --metadata Tested "Ramesh Singh"
         # pytest --html=report.html --self-contained-html
+       # pytest --html=report.html --self-contained-html --metadata Tested "Ramesh Singh"
 
 
 
