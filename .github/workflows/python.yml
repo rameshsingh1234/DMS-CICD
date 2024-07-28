@@ -6,117 +6,41 @@ on:
       - main
 
 jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
-    name: Scan the web application
-    strategy:
-      matrix:
-        target:
-          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets'
-          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
-          - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/accounts/get'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
+    zap_scan:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          target:
+              - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets'
+              - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/summary/get'
+              - 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/accounts/get'
+      name: Scan the web application at ${{ matrix.target }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            ref: master
 
-      - name: Sanitize URL and Set Filename
-        id: sanitize
-        run: echo "report_name=$(echo ${{ matrix.target }} | sed 's/[^a-zA-Z0-9]/_/g').html" >> $GITHUB_ENV
+        - name: ZAP Scan
+          uses: zaproxy/action-api-scan@v0.7.0
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
+            format: openapi
+            target: ${{ matrix.target }}
+            rules_file_name: '.zap/rules.tsv'
+            cmd_options: '-a'
 
-      - name: Run ZAP Docker container
-        run: |
-          docker run --rm -v $(pwd):/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable sh -c "
-            mkdir -p /zap/wrk/zap_reports && \
-            zap-api-scan.py -t ${{ matrix.target }} -f openapi -r /zap/wrk/zap_reports/${{ env.report_name }}
-          "
 
-      - name: Upload Reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: ZAP-Reports
-          path: zap_reports/*.html
+        - name: pwd
+          run: pwd
 
-  merge_reports:
-    runs-on: ubuntu-latest
-    needs: zap_scan
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+        - name: ls
+          run: ls
 
-      - name: Download Reports
-        uses: actions/download-artifact@v2
-        with:
-          name: ZAP-Reports
-          path: zap_reports
 
-      - name: Merge Reports
-        run: |
-          echo "<html><body>" > merged-report.html
-          for report in zap_reports/*.html; do
-            echo "<h2>Report: $report</h2>" >> merged-report.html
-            cat "$report" >> merged-report.html
-          done
-          echo "</body></html>" >> merged-report.html
-
-      - name: Upload Merged Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Merged-ZAP-Report
-          path: merged-report.html
-
-  api_test:
-    runs-on: ubuntu-latest
-    needs: zap_scan
-    name: Test the APIs
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Pytest
-        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html
-
-      - name: Upload Pytest Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Pytest-Report
-          path: ./reports/Pytest_report.html
-
-  send_reports:
-    runs-on: ubuntu-latest
-    needs: [merge_reports, api_test]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Download Merged ZAP Report
-        uses: actions/download-artifact@v2
-        with:
-          name: Merged-ZAP-Report
-          path: ./merged_zap_report
-
-      - name: Download Pytest Report
-        uses: actions/download-artifact@v2
-        with:
-          name: Pytest-Report
-          path: ./pytest_report
-
-      - name: Send Email with Reports
-        env:
-          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
-          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
-          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-        run: |
-          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL ./merged_zap_report/merged-report.html ./pytest_report/Pytest_report.html
+#        - name: Upload ZAP Report
+#          uses: actions/upload-artifact@v2
+#          with:
+#            name: ZAP-Report-${{ matrix.target }}
+#            path: 'path_to_zap_report_directory/*'
