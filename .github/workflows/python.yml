@@ -1,4 +1,5 @@
 name: API Testing
+
 on:
   push:
     branches:
@@ -23,106 +24,35 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Install jq
-        run: sudo apt-get install -y jq
+      - name: Test directory
+        run: pwd
 
-      - name: Verify Testdata Directory
+      - name: List files
+        run: ls
+
+      - name: Set up environment
         run: |
-          if [ -d "Testdata" ]; then
-            echo "Testdata directory exists."
-          else
-            echo "Testdata directory does not exist."
-          fi
+          echo "TARGETS=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets https://another-target-url.com/api" >> $GITHUB_ENV
 
-      - name: List Contents of Testdata Directory
+      - name: Run ZAP Scans and Collect Reports
         run: |
-          if [ -d "Testdata" ]; then
-            ls Testdata
-          fi
+          mkdir -p zap_reports
+          for target in $TARGETS; do
+            docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t $target -f openapi -J zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json
+          done
 
-      - name: Create generate_zap_scan_steps_and_execute.py
+      - name: Merge JSON Reports
         run: |
-          cat << 'EOF' > generate_zap_scan_steps_and_execute.py
-import csv
-import json
-import subprocess
-import os
+          echo '[
+          $(for file in zap_reports/*.json; do cat $file; echo ','; done | sed '$ s/,$//')
+          ]' > zap_reports/merged_report.json
 
-steps = []
-
-with open('Testdata/endpoint.csv', newline='', encoding='utf-8-sig') as csvfile:
-    reader = csv.DictReader(csvfile)
-    headers = reader.fieldnames
-    print(f"CSV Headers: {headers}")
-    if 'url' not in headers:
-        raise KeyError("'url' column is missing from CSV file")
-
-    for row in reader:
-        url = row['url']
-        steps.append({
-            'name': f"ZAP Scan {url}",
-            'uses': 'zaproxy/action-api-scan@v0.7.0',
-            'with': {
-                'token': '${{ secrets.GITHUB_TOKEN }}',
-                'docker_name': 'ghcr.io/zaproxy/zaproxy:stable',
-                'format': 'openapi',
-                'target': url,
-                'cmd_options': '-J /zap/report_json.json -w /zap/report_md.md -r /zap/report_html.html -a'
-            }
-        })
-
-# Save the steps to a JSON file (for debugging or future use)
-with open('dynamic_steps.json', 'w') as f:
-    json.dump(steps, f)
-
-# Execute each step
-for step in steps:
-    name = step['name']
-    uses = step['uses']
-    token = step['with']['token']
-    docker_name = step['with']['docker_name']
-    format = step['with']['format']
-    target = step['with']['target']
-    cmd_options = step['with']['cmd_options']
-
-    print(f"Running {name}")
-    command = f"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} -f {format} {cmd_options}"
-    try:
-        subprocess.run(command, shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"ZAP scan for {target} failed with exit code {e.returncode}")
-        print("Output:", e.output)
-        print("Error:", e.stderr)
-
-    # Verify that the report files are created
-    report_files = ["/zap/report_json.json", "/zap/report_md.md", "/zap/report_html.html"]
-    for report_file in report_files:
-        if not os.path.exists(report_file):
-            print(f"Report file {report_file} was not created.")
-        else:
-            print(f"Report file {report_file} exists.")
-EOF
-
-      - name: Generate and Execute ZAP Scan Steps
-        run: python generate_zap_scan_steps_and_execute.py
-
-      - name: Run Pytest
-        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
+      - name: Generate Consolidated Report
+        run: |
+          docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -J zap_reports/final_report.json -w zap_reports/final_report.md -r zap_reports/final_report.html -I zap_reports/merged_report.json
 
       - name: Upload ZAP HTML Report
         uses: actions/upload-artifact@v2
         with:
-          name: ZAP Report HTML
-          path: /zap/report_html.html
-
-      - name: Upload ZAP JSON Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: ZAP Report JSON
-          path: /zap/report_json.json
-
-      - name: Upload ZAP MD Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: ZAP Report MD
-          path: /zap/report_md.md
+          name: zap-report-html
+          path: zap_reports/final_report.html
