@@ -55,6 +55,12 @@ jobs:
       - name: ls
         run: ls
 
+      - name: cd
+        run: cd/zap_reports
+
+      - name: ls
+        run: ls
+
       - name: Upload ZAP HTML Report
         uses: actions/upload-artifact@v2
         with:
