@@ -58,8 +58,9 @@ jobs:
       - name: pwd
         run: pwd
 
-      - name: cd
-        run: cd/zap_reports
+      - name: Change to zap_reports directory
+        run: |
+          cd /home/runner/work/Sound_Box_CICD/Sound_Box_CICD/zap_reports
 
       - name: ls
         run: ls
