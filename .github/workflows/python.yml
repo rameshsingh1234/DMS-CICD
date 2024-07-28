@@ -33,7 +33,7 @@ jobs:
           echo "" >> generate_zap_scan_steps.py
           echo "steps = []" >> generate_zap_scan_steps.py
           echo "" >> generate_zap_scan_steps.py
-          echo "with open('endpoints.csv') as csvfile:" >> generate_zap_scan_steps.py
+          echo "with open('Testdata/endpoints.csv') as csvfile:" >> generate_zap_scan_steps.py
           echo "    reader = csv.DictReader(csvfile)" >> generate_zap_scan_steps.py
           echo "    for row in reader:" >> generate_zap_scan_steps.py
           echo "        url = row['url']" >> generate_zap_scan_steps.py
