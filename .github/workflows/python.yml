@@ -83,7 +83,7 @@ jobs:
           echo "    cmd_options = step['with']['cmd_options']" >> generate_zap_scan_steps_and_execute.py
           echo "" >> generate_zap_scan_steps_and_execute.py
           echo "    print(f\"Running {name}\")" >> generate_zap_scan_steps_and_execute.py
-          echo "    command = f\"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} {cmd_options}\"" >> generate_zap_scan_steps_and_execute.py
+          echo "    command = f\"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} -f {format} {cmd_options}\"" >> generate_zap_scan_steps_and_execute.py
           echo "    subprocess.run(command, shell=True, check=True)" >> generate_zap_scan_steps_and_execute.py
 
       - name: Generate and Execute ZAP Scan Steps
