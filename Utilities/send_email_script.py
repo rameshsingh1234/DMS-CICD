@@ -51,9 +51,9 @@ def send_email(username, password, recipient_email):
         msg.attach(attach)
 
     # Attach the test log file to Gmail
-    with open('./Logs/test.log', 'rb') as f:
+    with open('./Logs/API_TEST.log', 'rb') as f:
         attach = MIMEApplication(f.read(), _subtype="log")
-        attach.add_header('Content-Disposition', 'attachment', filename="test.log")
+        attach.add_header('Content-Disposition', 'attachment', filename="API_TEST.log")
         msg.attach(attach)
 
     # Send the email
