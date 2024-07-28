@@ -57,4 +57,3 @@ for step in steps:
             print(f"Report file {report_file} was not created.")
         else:
             print(f"Report file {report_file} exists.")
-

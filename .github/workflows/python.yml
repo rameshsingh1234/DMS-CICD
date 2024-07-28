@@ -94,4 +94,5 @@ jobs:
           echo "" >> generate_zap_scan_steps_and_execute.py
           echo "    report_files = ['/zap/report_json.json', '/zap/report_md.md', '/zap/report_html.html']" >> generate_zap_scan_steps_and_execute.py
           echo "    for report_file in report_files:" >> generate_zap_scan_steps_and_execute.py
-          echo "        if not os
+          echo "        if not os.path.exists(report_file):" >> generate_zap_scan_steps_and_execute.py
+          echo "            print
