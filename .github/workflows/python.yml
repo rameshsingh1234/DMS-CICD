@@ -21,32 +21,16 @@ jobs:
         with:
           ref: main
 
-      - name: Setup ZAP CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo docker run -u zap -p 8080:8080 -d -v $(pwd):/zap/wrk/:rw --name zap zaproxy/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080
-
-      - name: Wait for ZAP to start
-        run: |
-          until curl -s http://localhost:8080; do
-            echo "Waiting for ZAP to start..."
-            sleep 5
-          done
+      - name: Create Report Directory
+        run: mkdir -p zap_reports
 
       - name: Sanitize URL and Set Filename
         id: sanitize
         run: echo "report_name=$(echo ${{ matrix.target }} | sed 's/[^a-zA-Z0-9]/_/g').html" >> $GITHUB_ENV
 
-      - name: ZAP CLI Scan
+      - name: Run ZAP Docker container
         run: |
-          docker exec zap zap-cli quick-scan --self-contained --spider ${{ matrix.target }}
-          docker exec zap zap-cli report -o /zap/wrk/zap_reports/${{ env.report_name }}
-
-      - name: Copy Reports to Workspace
-        run: |
-          mkdir -p zap_reports
-          cp zap_reports/*.html zap_reports/
+          docker run --rm -v $(pwd)/zap_reports:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t ${{ matrix.target }} -f openapi -r ${{ env.report_name }} -d
 
       - name: Upload Reports
         uses: actions/upload-artifact@v2
