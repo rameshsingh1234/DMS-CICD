@@ -2,6 +2,7 @@ import configparser
 import csv
 import os
 
+
 class ReadConfig:
     @staticmethod
     def get_config_path():
@@ -22,6 +23,21 @@ class ReadConfig:
             for key in config['DEFAULT']:
                 print(f"{key}: {config['DEFAULT'][key]}")
         return config
+
+    @staticmethod
+    def get_username():
+        config = ReadConfig.get_config()
+        return config.get('EMAIL', 'username')
+
+    @staticmethod
+    def get_password():
+        config = ReadConfig.get_config()
+        return config.get('EMAIL', 'password')
+
+    @staticmethod
+    def get_recipient_email():
+        config = ReadConfig.get_config()
+        return config.get('EMAIL', 'recipient_email')
 
     @staticmethod
     def get_logs_directory():
@@ -90,6 +106,7 @@ class ReadConfig:
             return config['authorization']['auth_payload']
         except KeyError:
             raise KeyError("auth_payload key is missing in the authorization section of the configuration file")
+
 
 if __name__ == "__main__":
     try:
