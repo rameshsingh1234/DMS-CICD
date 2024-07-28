@@ -32,7 +32,7 @@ jobs:
 
       - name: Set up environment
         run: |
-          echo "TARGETS=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/otp https://another-target-url.com/api" >> $GITHUB_ENV
+          echo "TARGETS=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/preferences https://another-target-url.com/api" >> $GITHUB_ENV
 
       - name: Run ZAP Scans and Collect Reports
         run: |
