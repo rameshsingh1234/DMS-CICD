@@ -48,7 +48,7 @@ jobs:
           echo "" >> generate_zap_scan_steps_and_execute.py
           echo "steps = []" >> generate_zap_scan_steps_and_execute.py
           echo "" >> generate_zap_scan_steps_and_execute.py
-          echo "with open('Testdata/endpoint.csv') as csvfile:" >> generate_zap_scan_steps_and_execute.py
+          echo "with open('Testdata/endpoint.csv', newline='', encoding='utf-8-sig') as csvfile:" >> generate_zap_scan_steps_and_execute.py
           echo "    reader = csv.DictReader(csvfile)" >> generate_zap_scan_steps_and_execute.py
           echo "    headers = reader.fieldnames" >> generate_zap_scan_steps_and_execute.py
           echo "    print(f\"CSV Headers: {headers}\")" >> generate_zap_scan_steps_and_execute.py
