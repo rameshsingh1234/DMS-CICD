@@ -37,6 +37,7 @@ jobs:
       - name: Run ZAP Scans and Collect Reports
         run: |
           mkdir -p zap_reports
+          chmod 777 zap_reports
           for target in $TARGETS; do
             docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t $target -f openapi -J zap_reports/report_$(echo $target | md5sum | cut -d' ' -f1).json
           done
