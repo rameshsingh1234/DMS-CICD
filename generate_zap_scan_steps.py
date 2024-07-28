@@ -20,7 +20,7 @@ with open('Testdata/endpoint.csv', newline='', encoding='utf-8-sig') as csvfile:
             'with': {
                 'token': '${{ secrets.GITHUB_TOKEN }}',
                 'docker_name': 'ghcr.io/zaproxy/zaproxy:stable',
-                'format': 'openapi',  # Specify the format here
+                'format': 'openapi',
                 'target': url,
                 'cmd_options': '-J /zap/report_json.json -w /zap/report_md.md -r /zap/report_html.html -a'
             }
@@ -42,4 +42,10 @@ for step in steps:
 
     print(f"Running {name}")
     command = f"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} -f {format} {cmd_options}"
-    subprocess.run(command, shell=True, check=True)
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"ZAP scan for {target} failed with exit code {e.returncode}")
+        print("Output:", e.output)
+        print("Error:", e.stderr)
+        # Handle non-zero exit codes gracefully if needed

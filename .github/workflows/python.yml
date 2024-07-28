@@ -84,7 +84,12 @@ jobs:
           echo "" >> generate_zap_scan_steps_and_execute.py
           echo "    print(f\"Running {name}\")" >> generate_zap_scan_steps_and_execute.py
           echo "    command = f\"docker run --rm -v $(pwd):/zap/wrk/:rw -t {docker_name} zap-api-scan.py -t {target} -f {format} {cmd_options}\"" >> generate_zap_scan_steps_and_execute.py
-          echo "    subprocess.run(command, shell=True, check=True)" >> generate_zap_scan_steps_and_execute.py
+          echo "    try:" >> generate_zap_scan_steps_and_execute.py
+          echo "        subprocess.run(command, shell=True, check=True)" >> generate_zap_scan_steps_and_execute.py
+          echo "    except subprocess.CalledProcessError as e:" >> generate_zap_scan_steps_and_execute.py
+          echo "        print(f\"ZAP scan for {target} failed with exit code {e.returncode}\")" >> generate_zap_scan_steps_and_execute.py
+          echo "        print(\"Output:\", e.output)" >> generate_zap_scan_steps_and_execute.py
+          echo "        print(\"Error:\", e.stderr)" >> generate_zap_scan_steps_and_execute.py
 
       - name: Generate and Execute ZAP Scan Steps
         run: python generate_zap_scan_steps_and_execute.py
@@ -101,25 +106,4 @@ jobs:
 #      - name: Attach the ZAP Report to Gmail
 #        uses: actions/upload-artifact@v2
 #        with:
-#          name: Test Report
-#          path: /zap/report_html.html
-#
-#      - name: Test directory
-#        run: pwd
-#
-#      - name: Test
-#        run: ls
-#
-#      - name: Attach the Test Logs to Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Test Log
-#          path: Logs/test.log
-#
-#      - name: Configure Gmail and Send Email
-#        env:
-#          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
-#          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
-#          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}
-#        run: |
-#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#          name
