@@ -1,42 +1,11 @@
 name: API Testing
+
 on:
   push:
     branches:
       - main
-#test1
+
 jobs:
-#  zap_scan:
-#    runs-on: ubuntu-latest
-#    name: Test and Scan the APIs
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          ref: main
-#
-#      - name: Setup Python
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: 3.9
-#
-#      - name: Install dependencies
-#        run: |
-#          pip install -r requirements.txt
-#
-#      - name: Test directory
-#        run: pwd
-#
-#      - name: List files
-#        run: ls
-
-#      - name: Change directory
-#        run: cd /home/runner/work/Sound_Box_CICD/
-
-#      - name: Run Pytest
-#       # run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
-#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
-
-
   zap_scan:
     runs-on: ubuntu-latest
     name: Scan the web application
@@ -69,186 +38,85 @@ jobs:
           name: ZAP-Reports
           path: report-*.html
 
-    merge_reports:
-      runs-on: ubuntu-latest
-      needs: zap_scan
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+  merge_reports:
+    runs-on: ubuntu-latest
+    needs: zap_scan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - name: Download Reports
-          uses: actions/download-artifact@v2
-          with:
-            name: ZAP-Reports
-            path: ./zap_reports
+      - name: Download Reports
+        uses: actions/download-artifact@v2
+        with:
+          name: ZAP-Reports
+          path: ./zap_reports
 
-        - name: Merge Reports
-          run: |
-            echo "<html><body>" > merged-report.html
-            for report in ./zap_reports/*.html; do
-              echo "<h2>Report: $report</h2>" >> merged-report.html
-              cat "$report" >> merged-report.html
-            done
-            echo "</body></html>" >> merged-report.html
+      - name: Merge Reports
+        run: |
+          echo "<html><body>" > merged-report.html
+          for report in ./zap_reports/*.html; do
+            echo "<h2>Report: $report</h2>" >> merged-report.html
+            cat "$report" >> merged-report.html
+          done
+          echo "</body></html>" >> merged-report.html
 
-        - name: Upload Merged Report
-          uses: actions/upload-artifact@v2
-          with:
-            name: Merged-ZAP-Report
-            path: merged-report.html
+      - name: Upload Merged Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Merged-ZAP-Report
+          path: merged-report.html
 
-
-
-#      - name: Attach the Test Report To gmail
-#        uses: actions/upload-artifact@v2
+#  api_test:
+#    runs-on: ubuntu-latest
+#    needs: zap_scan
+#    name: Test the APIs
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
 #        with:
-#          name: Test Report
-#          path: reports/Pytest_report.html
+#          ref: main
 #
-#      - name: Attach the Zap Report To Gmail
-#        uses: actions/upload-artifact@v2
+#      - name: Setup Python
+#        uses: actions/setup-python@v4
 #        with:
-#          name: Test Report
-#          path: report_html.html
+#          python-version: 3.9
 #
-#      - name: test directory
-#        run : pwd
-#
-#      - name : test
-#        run : ls
-#
-#      - name: Attach the Test Logs To Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Test Log
-#          path: Logs/test.log
-#
-#
-#      - name: Configure Gmail and Send Email
-#        env:
-#          GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
-#          GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
-#          RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
+#      - name: Install dependencies
 #        run: |
-#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+#          pip install -r requirements.txt
 #
+#      - name: Run Pytest
+#        run: pytest ./TestScript/Test_app.py --html-report=./reports/Pytest_report.html
 #
-#
-#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        #
-        #    - name: Send Email Report
-        #      uses: actions/upload-artifact@v2
-        #      with:
-        #        name: Test Report
-        #        path: reports/report.html
-
-
-
-
-#      - name: Upload ZAP HTML Report
+#      - name: Upload Pytest Report
 #        uses: actions/upload-artifact@v2
 #        with:
-#          name: .zap-report-html
-#          path: report_html.html
+#          name: Pytest-Report
+#          path: ./reports/Pytest_report.html
 #
-#      - name: Configure Gmail and Send Email
+#  send_reports:
+#    runs-on: ubuntu-latest
+#    needs: [merge_reports, api_test]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#
+#      - name: Download Merged ZAP Report
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: Merged-ZAP-Report
+#          path: ./merged_zap_report
+#
+#      - name: Download Pytest Report
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: Pytest-Report
+#          path: ./pytest_report
+#
+#      - name: Send Email with Reports
 #        env:
 #          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
 #          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
 #          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
 #        run: |
-#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
-#
-
-
-
-
-
-
-
-
-
-
-
-#name: Test and Scan
-#
-#on:
-#  push:
-#    branches:
-#      - master
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout repository
-#      uses: actions/checkout@v3
-#    - name: Setup Python
-#      uses: actions/setup-python@v4
-#      with:
-#        python-version: 3.9  # Replace 'x' with your desired Python version
-#
-#    - name: Install dependencies
-#      run: |
-#        pip install -r requirements.txt
-#
-#    - name: test directory
-#      run : pwd
-#
-#    - name : test
-#      run : ls
-#
-#    - name : test1
-#      run : cd /home/runner/work/SoundBox_APP/
-#
-#
-##test
-#
-#    - name: Run Pytest
-#
-#
-#      run: pytest -v -s --capture=tee-sys ./TestScript/Test_app.py --html=./reports/report.html
-#
-#
-#
-##test
-#
-#    - name: Send Email Report
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: Test Report
-#        path: reports/report.html
-#
-#
-#
-#    - name: Configure Gmail and Send Email
-#      env:
-#        GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
-#        GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
-#
-#        RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}  # Replace with the recipient's email
-#
-#      run: |
-#        python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
-#
+#          python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL ./merged_zap_report/merged-report.html ./pytest_report/Pytest_report.html
