@@ -52,6 +52,9 @@ jobs:
         run: |
           docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/zap_reports/final_report.json -w /zap/wrk/zap_reports/final_report.md -r /zap/wrk/zap_reports/final_report.html -I /zap/wrk/zap_reports/merged_report.json || true"
 
+      - name: ls
+        run: ls
+
       - name: Upload ZAP HTML Report
         uses: actions/upload-artifact@v2
         with:
