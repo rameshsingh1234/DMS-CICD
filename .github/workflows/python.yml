@@ -32,6 +32,7 @@ jobs:
             echo "Testdata directory exists."
           else
             echo "Testdata directory does not exist."
+          fi
 
       - name: List Contents of Testdata Directory
         run: |
