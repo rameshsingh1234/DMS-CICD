@@ -42,6 +42,9 @@ jobs:
           $(for file in zap_reports/*.json; do cat $file; echo ','; done | sed '$ s/,$//')
           ]' > zap_reports/merged_report.json
 
+      - name: Debug: Show Merged Report
+        run: cat zap_reports/merged_report.json
+
       - name: Generate Consolidated Report
         run: |
           docker run -v $(pwd)/zap_reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable /bin/sh -c "zap-api-scan.py -J /zap/wrk/final_report.json -w /zap/wrk/final_report.md -r /zap/wrk/final_report.html -I /zap/wrk/merged_report.json || true"
