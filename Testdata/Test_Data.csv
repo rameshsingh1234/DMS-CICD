@@ -386,20 +386,20 @@ TC_Soundbox_API_06-A,negative,/user/accounts/get/invalid,POST,TRUE,FALSE,"{""Con
 ""mobile_number"": ""9738350592"",
 ""account_number"": ""4534020000881700""
 }",,404,,,,,,,,,,,,,
-TC_Soundbox_API_06-B,negative,/user/accounts/get,GET,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-B,negative,/user/account/upi/get,GET,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"": ""4534020000881700""
 }",,404,,,,,,,,,,,,,
-TC_Soundbox_API_06-C,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-C,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": """",
 ""account_number"": ""4534020000881700""
 }",,200,"message,code","{
     ""code"": 1000,
     ""message"": [
-        ""Mobile Number is required""
+        ""Mobile Number cannot be empty""
     ]
 }",,,,,,,,,,,
-TC_Soundbox_API_06-D,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-D,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""account_number"": ""4534020000881700""
 }",,200,"message,code","{
     ""code"": 1000,
@@ -407,7 +407,7 @@ TC_Soundbox_API_06-D,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Typ
         ""Mobile Number is required""
     ]
 }",,,,,,,,,,,
-TC_Soundbox_API_06-E,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-E,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": 9738350592,
 ""account_number"": ""4534020000881700""
 }",,200,"message,code","{
@@ -416,32 +416,32 @@ TC_Soundbox_API_06-E,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Typ
         ""Mobile Number must be string""
     ]
 }",,,,,,,,,,,
-TC_Soundbox_API_06-F,negative,/user/accounts/get,POST,TRUE,TRUE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-F,negative,/user/account/upi/get,POST,TRUE,TRUE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"": ""4534020000881700""
 }",,403,message,"{
     ""message"": ""Forbidden""
 }",,,,,,,,,,,
-TC_Soundbox_API_06-G,negative,/user/accounts/get,POST,FALSE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-G,negative,/user/account/upi/get,POST,FALSE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"": ""4534020000881700""
 }",,401,message,"{
     ""message"": ""Unauthorized""
 }",,,,,,,,,,,
-TC_Soundbox_API_06-H,negative,/user/accounts/get,POST,TRUE,TRUE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-H,negative,/user/account/upi/get,POST,TRUE,TRUE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"": ""4534020000881700""
 }",,403,message,"{
     ""message"": ""Forbidden""
 }",,,,,,,,,,,
-TC_Soundbox_API_06-I,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-I,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"":"""" 
 }",,200,"message,code","{
-""code"": 1000,
-""message"": ""Account number is Required""
+  ""code"": 1000,
+  ""message"": [""Account Number cannot be empty""]
 }",,,,,,,,,,,
-TC_Soundbox_API_06-J,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-J,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592""
 }",,200,"message,code","{
     ""code"": 1000,
@@ -449,7 +449,7 @@ TC_Soundbox_API_06-J,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Typ
         ""Account Number is required""
     ]
 }",,,,,,,,,,,
-TC_Soundbox_API_06-K,negative,/user/accounts/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+TC_Soundbox_API_06-K,negative,/user/account/upi/get,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
 ""mobile_number"": ""9738350592"",
 ""account_number"": 4534020000881700
 }",,200,"message,code","{
