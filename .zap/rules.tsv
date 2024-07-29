@@ -1,6 +1,6 @@
 
 # Rule to adjust attack strength
-ATTACK_STRENGTH	LOW
+ATTACK_STRENGTH	High
 
 # Rule to adjust alert threshold
 ALERT_THRESHOLD	MEDIUM
