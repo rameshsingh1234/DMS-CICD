@@ -170,8 +170,20 @@ TC_Soundbox_API_02-L,negative,/user/otp,PATCH,TRUE,FALSE,"{""Content-Type"":""ap
 }",,,,,,,,,,,
 TC_Soundbox_API_03,Positive,/user/secrets,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
   ""mobile_number"": ""9731037150"",
-  ""mpin"": 12432
-}",,200,"code,data",,,,,,,,,,,,
+  ""mpin"": 1243
+}",,200,"code,data","{
+    ""code"": 2000,
+    ""data"": {
+        ""uuid"": ""33dea410-f67c-4f24-a96c-39586a62d4bc"",
+        ""mobile_number"": ""9731037150"",
+        ""access_token"": ""eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvSS14anVfTDRQSmhlTjk1dlVsRF9YZzBqbnhIVl8wTGpsVlVxYXRkV0FVIn0.eyJleHAiOjE3MjQ1Nzk2NDIsImlhdCI6MTcyMjQxOTY0MiwianRpIjoiMTY3ODM3MTUtNDAxYy00NDAzLTlkNjEtMGM1YjNjYzBjOTM5IiwiaXNzIjoiaHR0cDovL2ludGVybmFsLXNvdW5kYm94LWFsYi0xNDE2Nzk3MDY5LmFwLXNvdXRoLTEuZWxiLmFtYXpvbmF3cy5jb20vcmVhbG1zL3NvdW5kYm94IiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjMzZGVhNDEwLWY2N2MtNGYyNC1hOTZjLTM5NTg2YTYyZDRiYyIsInR5cCI6IkJlYXJlciIsImF6cCI6InNvdW5kYm94LWNsaSIsInNlc3Npb25fc3RhdGUiOiIzYWZjZmNhMy01YjMxLTQ2Y2ItODhhNC0yMTY1YWZjOWU5ODMiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiZGVmYXVsdC1yb2xlcy1zb3VuZGJveCJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjNhZmNmY2EzLTViMzEtNDZjYi04OGE0LTIxNjVhZmM5ZTk4MyIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IlJBTSBQQUwiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiI5NzMxMDM3MTUwIiwiZ2l2ZW5fbmFtZSI6IlJBTSBQQUwifQ.SbBIyvChzh8CgZAP0fru3djKHRkCZ7cD9xZROvgGFv54cQ_va6OUjZErgdpk6E5av_oxaMD7i0UCoj0KTCEG52htcmqXETnuqq_imeDyKiTQ6gleay0s2mqFrMMpOaBQ39AvRC7arHqKUWCRPWlMRVAyJukZ77rL2GByk5bGrMrSauvgKpEbZXIw407642-F-OGqV_g7tCKGoDcnra2jEhTT97HHx-I1H4sTao_iN5lIK0vPqFXDKbH-LhHOWy9wbbMlLqPkSolxysNTLDQCZp9yIb5e3b7hYNPdywihDasRzpplWrn4D5JSAb61hnmrE8Z1NAw0MRFKnuN5blE55Q"",
+        ""refresh_token"": ""eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhYjZjYjM4Mi1hMmQ3LTRlMjMtOWJjZS03MjAzYzExYjliNDMifQ.eyJleHAiOjE3MjQ1Nzk2NDIsImlhdCI6MTcyMjQxOTY0MiwianRpIjoiMmFiNTIxMjItZjZlYi00ODU1LTgwMmQtODM4YTZmZTEyNDU0IiwiaXNzIjoiaHR0cDovL2ludGVybmFsLXNvdW5kYm94LWFsYi0xNDE2Nzk3MDY5LmFwLXNvdXRoLTEuZWxiLmFtYXpvbmF3cy5jb20vcmVhbG1zL3NvdW5kYm94IiwiYXVkIjoiaHR0cDovL2ludGVybmFsLXNvdW5kYm94LWFsYi0xNDE2Nzk3MDY5LmFwLXNvdXRoLTEuZWxiLmFtYXpvbmF3cy5jb20vcmVhbG1zL3NvdW5kYm94Iiwic3ViIjoiMzNkZWE0MTAtZjY3Yy00ZjI0LWE5NmMtMzk1ODZhNjJkNGJjIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6InNvdW5kYm94LWNsaSIsInNlc3Npb25fc3RhdGUiOiIzYWZjZmNhMy01YjMxLTQ2Y2ItODhhNC0yMTY1YWZjOWU5ODMiLCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiIzYWZjZmNhMy01YjMxLTQ2Y2ItODhhNC0yMTY1YWZjOWU5ODMifQ.sSsyacH0iOfbunACLv_iIns28HgqXd5RcSi19jo3BCA"",
+        ""default_preferences"": {
+            ""language"": ""kn"",
+            ""mute"": ""0""
+        }
+    }
+}",,,,,,,,,,,
 TC_Soundbox_API_03-A,negative,/user/secrets,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
   ""mpin"": 123456
 }",,200,"message,code","{
