@@ -9,7 +9,7 @@ log_file_level = INFO
 
 [DEFAULT]
 LogsDirectory = ../Logs
-CSVFilePath = ../Testdata/Test_Data_updated.csv
+CSVFilePath = ../Testdata/Test1.csv
 Base_url = https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com
 
 [authorization]
