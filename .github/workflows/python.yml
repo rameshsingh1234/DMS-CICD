@@ -38,8 +38,6 @@ jobs:
 #        # pytest --html=report.html --self-contained-html
        # pytest --html=report.html --self-contained-html --metadata Tested "Ramesh Singh"
 
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Get Bearer Token
         id: get_token
