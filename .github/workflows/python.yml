@@ -1,5 +1,5 @@
 name: API Testing
-#Test1
+
 on:
   push:
     branches:
@@ -58,7 +58,7 @@ jobs:
           fi
 
           # Print the token for debugging (use with caution)
-          echo "Bearer Token: $TOKEN" 
+          echo "Bearer Token: $TOKEN"
 
           # Save the token to the environment for later steps
           echo "TOKEN=$TOKEN" >> $GITHUB_ENV
@@ -113,6 +113,7 @@ jobs:
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}  # Replace with the recipient's email
         run: |
           python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
+
 
 #name: API Testing
 #on:
