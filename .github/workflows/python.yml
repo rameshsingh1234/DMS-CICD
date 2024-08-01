@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "ZAP_AUTH_HEADER=Authorization" >> $GITHUB_ENV
           echo "ZAP_AUTH_HEADER_VALUE=Bearer ${{ env.TOKEN }}" >> $GITHUB_ENV
-          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com" >> $GITHUB_ENV
+          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/get" >> $GITHUB_ENV
 
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
