@@ -63,8 +63,8 @@ TC_Soundbox_API_02,negative,/user/otp,PATCH,TRUE,FALSE,"{""Content-Type"":""appl
   ""device_id"": ""345343453"",
   ""identification"": ""333""
 }",,200,"code,message","{
-""code"": 2000,
-""message"": ""VALID OTP""
+""code"": 1000,
+""message"": ""INVALID OTP""
 }",,,,,,,,,,,
 TC_Soundbox_API_02-A,negative,/user/otp/invalidurl,PATCH,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
   ""otp"": 345206,
