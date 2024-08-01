@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "ZAP_AUTH_HEADER=Authorization" >> $GITHUB_ENV
           echo "ZAP_AUTH_HEADER_VALUE=Bearer ${{ env.TOKEN }}" >> $GITHUB_ENV
-          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets" >> $GITHUB_ENV
+  #echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets" >> $GITHUB_ENV
 
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
@@ -80,7 +80,7 @@ jobs:
         env:
           ZAP_AUTH_HEADER: ${{ env.ZAP_AUTH_HEADER }}
           ZAP_AUTH_HEADER_VALUE: ${{ env.ZAP_AUTH_HEADER_VALUE }}
-          ZAP_AUTH_HEADER_SITE: ${{ env.ZAP_AUTH_HEADER_SITE }}
+          #ZAP_AUTH_HEADER_SITE: ${{ env.ZAP_AUTH_HEADER_SITE }}
 
       - name: Attach the Test Report To Gmail
         uses: actions/upload-artifact@v2
