@@ -8,85 +8,27 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-    name: Test and Scan the APIs
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.7.0
         with:
-          ref: main
-
-#      - name: Setup Python
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: 3.9
-#
-#      - name: Install dependencies
-#        run: |
-#          pip install -r requirements.txt
-#
-#      - name: Test directory
-#        run: pwd
-#
-#      - name: List files
-#        run: ls
-#
-#      - name: Change directory
-#        run: cd /home/runner/work/Sound_Box_CICD/
-#
-#      - name: Run Pytest
-#        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html --self-contained-html --metadata Tested "Ramesh Singh"
-#
-#      - name: Get Bearer Token
-#        id: get_token
-#        run: |
-#          # Make the API request and capture the response
-#          response=$(curl -X POST "https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets" \
-#            -H "Content-Type: application/json" \
-#            -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvSS14anVfTDRQSmhlTjk1dlVsRF9YZzBqbnhIVl8wTGpsVlVxYXRkV0FVIn0.eyJleHAiOjE3MjM4NzIyNDQsImlhdCI6MTcyMTcxMjI0NCwianRpIjoiNGU4NTExYmYtYjlkMC00N2RkLWJlNmEtZWM4MGI4NjFkNDRkIiwiaXNzIjoiaHR0cDovL2JzY3l0eHpzYzMuZXhlY3V0ZS1hcGkuYXAtc291dGgtMS5hbWF6b25hd3MuY29tL3JlYWxtcy9zb3VuZGJveCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmZjY1MTY2NC0wZTExLTQ3MmMtYTAyMS0zYWUxMjljNzM4ZGEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzb3VuZGJveC1jbGkiLCJzZXNzaW9uX3N0YXRlIjoiZDE0ZjZlN2QtNzg0NC00MjVlLWIwNWItZmNkOWIxMjI0NDI2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsImRlZmF1bHQtcm9sZXMtc291bmRib3giXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiJkMTRmNmU3ZC03ODQ0LTQyNWUtYjA1Yi1mY2Q5YjEyMjQ0MjYiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6Imd1ZXN0dXNlciJ9.SJpuuUGwUCALetYTxwWEPmtXProf2NpePNaBbrCixWbSvfpO9jUiUhM9RaO305cJZq-uOE8s7RrgtkK2pn1q9S7xYsAb3XTK-ucjpjYuBbQ3WSErvGTQezoLUuBQaB8oyHyA-gEhB_wQ6pFwCp8PJUMvxT-4-lh8r9z3P72VZWFc8dKrWGkqwKiXEUPwpfkcrGhl5MBy1JahKc0ChYlgVFQztZwF8jlI_6HBDrJHNf95b5KJDHE9H0IbqJWkT12sfM5L8i5BO_18PEEShkJAn9YFZc5BQKlwNMChSYCKzv4RrxjpeOJUoJYWaEHvHEPxcJQ4p88g89nMB35fnVtPEg" \
-#            -d '{"mobile_number": "9738350592","mpin": 1234}')
-#
-#          # Print the entire response for debugging
-#          echo "API Response: $response"
-#
-#          # Extract the token from the response
-#          TOKEN=$(echo $response | jq -r '.data.access_token')
-#
-#          # Check if the token is empty
-#          if [ -z "$TOKEN" ]; then
-#            echo "Error: Token is empty. Please check the API response."
-#            exit 1
-#          fi
-#
-#          # Print the token for debugging (use with caution)
-#          echo "Bearer Token: $TOKEN"
-#
-#          # Save the token to the environment for later steps
-#          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
-#
-#      - name: Set Authentication Environment Variables
-#        run: |
-#          echo "ZAP_AUTH_HEADER=Authorization" >> $GITHUB_ENV
-#          echo "ZAP_AUTH_HEADER_VALUE=Bearer ${{ env.TOKEN }}" >> $GITHUB_ENV
-#          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/simulate" >> $GITHUB_ENV
-
-      - name: ZAP Scan
-        uses: zaproxy/action-api-scan@v0.7.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
-          format: openapi
-          target: 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/simulate'
-          cmd_options: '-J report_json.json -w report_md.md -r report_html.html -a'
-        env:
-          ZAP_AUTH_HEADER: ${{ env.ZAP_AUTH_HEADER }}
-          ZAP_AUTH_HEADER_VALUE: ${{ env.ZAP_AUTH_HEADER_VALUE }}
-          ZAP_AUTH_HEADER_SITE: ${{ env.ZAP_AUTH_HEADER_SITE }}
-
-#      - name: Attach the Test Report To Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Test Report
-#          path: reports/Pytest_report.html
+          target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
+          fail_action: true
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: >
+            -config api.addrs.addr.name=.* 
+            -config api.addrs.addr.regex=true 
+            -config httpsender.addHeader("iid", "197")
+            -config httpsender.addHeader("iid", "218192")
+            -config replacer.full_list(0).description="Replace request body"
+            -config replacer.full_list(0).enabled=true
+            -config replacer.full_list(0).matchtype=REQ_BODY_STR
+            -config replacer.full_list(0).match=""
+            -config replacer.full_list(0).replacement='{"data":"VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoK0OG8cC2MEmT5AKMlYiTxNWU3AlFXF6ol30yWiIjyVod21OEEkhQetrIWT8jy3ebAweWjT1csPPzY7kKE6jpRYkMvnDDR+o3ggoL5iAqO8UM31guZ1zkQMGstDLrzCxAGCjgNtI7aXiRBj1+bxPgJ1"}'
+      
 
       - name: Attach the Zap Report To Gmail
         uses: actions/upload-artifact@v2
@@ -99,12 +41,6 @@ jobs:
 
       - name: Test
         run: ls
-
-#      - name: Attach the Test Logs To Gmail
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: Test Log
-#          path: Logs/test.log
 
       - name: Configure Gmail and Send Email
         env:
