@@ -23,11 +23,13 @@ jobs:
           format: openapi
           target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
           cmd_options: >
-              -config api.addrs.addr.name=.* 
-              -config api.addrs.addr.regex=true 
-              -J report_json.json -w report_md.md -r report_html.html -a
-      
-      
+            -config api.addrs.addr.name=.* 
+            -config api.addrs.addr.regex=true 
+            -J report_json.json 
+            -w report_md.md 
+            -r report_html.html 
+            -a
+
 
       - name: Attach the Zap Report To Gmail
         uses: actions/upload-artifact@v2
