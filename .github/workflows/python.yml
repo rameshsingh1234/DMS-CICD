@@ -23,6 +23,7 @@ jobs:
           format: openapi
           target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
           cmd_options: >
+            -config /zap/wrk/config/api-config
             -config api.addrs.addr.name=.* 
             -config api.addrs.addr.regex=true 
             -config httpsender.addHeader("iid", "197")
