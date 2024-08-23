@@ -39,10 +39,10 @@ def send_email(username, password, recipient_email):
     msg.attach(MIMEText(body, 'plain'))
 
     # Attach the test report file to gmail
-    with open('./reports/Pytest_report.html', 'rb') as f:
-        attach = MIMEApplication(f.read(), _subtype="html")
-        attach.add_header('Content-Disposition', 'attachment', filename="Pytest_report.html")
-        msg.attach(attach)
+    # with open('./reports/Pytest_report.html', 'rb') as f:
+    #     attach = MIMEApplication(f.read(), _subtype="html")
+    #     attach.add_header('Content-Disposition', 'attachment', filename="Pytest_report.html")
+    #     msg.attach(attach)
 
     # Attach the Security report to gmail
     with open('./report_html.html', 'rb') as f:
@@ -51,10 +51,10 @@ def send_email(username, password, recipient_email):
         msg.attach(attach)
 
     # Attach the test log file to Gmail
-    with open('./Logs/API_TEST.log', 'rb') as f:
-        attach = MIMEApplication(f.read(), _subtype="log")
-        attach.add_header('Content-Disposition', 'attachment', filename="API_TEST.log")
-        msg.attach(attach)
+    # with open('./Logs/API_TEST.log', 'rb') as f:
+    #     attach = MIMEApplication(f.read(), _subtype="log")
+    #     attach.add_header('Content-Disposition', 'attachment', filename="API_TEST.log")
+    #     msg.attach(attach)
 
     # Send the email
     try:
