@@ -15,7 +15,6 @@ jobs:
         with:
           target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
           fail_action: true
-          rules_file_name: '.zap/rules.tsv'
           cmd_options: >
             -config api.addrs.addr.name=.* 
             -config api.addrs.addr.regex=true 
