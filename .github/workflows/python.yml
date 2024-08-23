@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-#test
+
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -14,18 +14,25 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
+
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
           format: openapi
-          target: 'https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/simulate'
-          cmd_options: '-J report_json.json -w report_md.md -r report_html.html -a'
-        env:
-          ZAP_AUTH_HEADER: ${{ env.ZAP_AUTH_HEADER }}
-          ZAP_AUTH_HEADER_VALUE: ${{ env.ZAP_AUTH_HEADER_VALUE }}
-          ZAP_AUTH_HEADER_SITE: ${{ env.ZAP_AUTH_HEADER_SITE }}
+          target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
+          cmd_options: >
+            -config api.addrs.addr.name=.* 
+            -config api.addrs.addr.regex=true 
+            -config httpsender.addHeader("iid", "197")
+            -config httpsender.addHeader("iid", "218192")
+            -config replacer.full_list(0).description="Replace request body"
+            -config replacer.full_list(0).enabled=true
+            -config replacer.full_list(0).matchtype=REQ_BODY_STR
+            -config replacer.full_list(0).match=""
+            -config replacer.full_list(0).replacement='{"data":"VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoK0OG8cC2MEmT5AKMlYiTxNWU3AlFXF6ol30yWiIjyVod21OEEkhQetrIWT8jy3ebAweWjT1csPPzY7kKE6jpRYkMvnDDR+o3ggoL5iAqO8UM31guZ1zkQMGstDLrzCxAGCjgNtI7aXiRBj1+bxPgJ1"}'
+            -J report_json.json -w report_md.md -r report_html.html -a
 
 
       - name: Attach the Zap Report To Gmail
