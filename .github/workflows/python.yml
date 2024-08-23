@@ -23,12 +23,15 @@ jobs:
           format: openapi
           target: 'https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif'
           cmd_options: >
-            -config api.addrs.addr.name=.* 
-            -config api.addrs.addr.regex=true 
             -J report_json.json 
             -w report_md.md 
             -r report_html.html 
-            -a
+            -a 
+            -d 
+            -config api.scan.headers="iid: 197;iid: 218192"
+            -u "https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com/switch2/pnotif"
+            -data "{ \"data\":\"VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoK0OG8cC2MEmT5AKMlYiTxNWU3AlFXF6ol30yWiIjyVod21OEEkhQetrIWT8jy3ebAweWjT1csPPzY7kKE6jpRYkMvnDDR+o3ggoL5iAqO8UM31guZ1zkQMGstDLrzCxAGCjgNtI7aXiRBj1+bxPgJ1\" }"
+
 
 
       - name: Attach the Zap Report To Gmail
