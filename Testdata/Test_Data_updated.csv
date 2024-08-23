@@ -959,3 +959,8 @@ TC_Soundbox_API_09_Q,Positive,/payments/simulate,POST,TRUE,TRUE,"{""Content-Type
 ""payer_name"": ""abc"" }",,403,message,"{
     ""message"": ""Forbidden""
 }",,,,,,,,,,,
+TC_Soundbox_API_11,Positive,payments/user/vpa,POST,TRUE,FALSE,"{""Content-Type"":""application/json""}","{
+    ""uuid"": ""533dea410-f67c-4f24-a96c-39586a62d4bc"",
+    ""vpa"": ""JFSPATM13201242a29e4b35ae0d268bd15c"",
+    ""mobile_number"": ""9738350591""
+}",,200,,,,,,,,,,,,,

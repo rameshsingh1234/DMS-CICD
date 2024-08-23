@@ -15,59 +15,59 @@ jobs:
         with:
           ref: main
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Test directory
-        run: pwd
-
-      - name: List files
-        run: ls
-
-      - name: Change directory
-        run: cd /home/runner/work/Sound_Box_CICD/
-
-      - name: Run Pytest
-        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html --self-contained-html --metadata Tested "Ramesh Singh"
-
-      - name: Get Bearer Token
-        id: get_token
-        run: |
-          # Make the API request and capture the response
-          response=$(curl -X POST "https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvSS14anVfTDRQSmhlTjk1dlVsRF9YZzBqbnhIVl8wTGpsVlVxYXRkV0FVIn0.eyJleHAiOjE3MjM4NzIyNDQsImlhdCI6MTcyMTcxMjI0NCwianRpIjoiNGU4NTExYmYtYjlkMC00N2RkLWJlNmEtZWM4MGI4NjFkNDRkIiwiaXNzIjoiaHR0cDovL2JzY3l0eHpzYzMuZXhlY3V0ZS1hcGkuYXAtc291dGgtMS5hbWF6b25hd3MuY29tL3JlYWxtcy9zb3VuZGJveCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmZjY1MTY2NC0wZTExLTQ3MmMtYTAyMS0zYWUxMjljNzM4ZGEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzb3VuZGJveC1jbGkiLCJzZXNzaW9uX3N0YXRlIjoiZDE0ZjZlN2QtNzg0NC00MjVlLWIwNWItZmNkOWIxMjI0NDI2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsImRlZmF1bHQtcm9sZXMtc291bmRib3giXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiJkMTRmNmU3ZC03ODQ0LTQyNWUtYjA1Yi1mY2Q5YjEyMjQ0MjYiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6Imd1ZXN0dXNlciJ9.SJpuuUGwUCALetYTxwWEPmtXProf2NpePNaBbrCixWbSvfpO9jUiUhM9RaO305cJZq-uOE8s7RrgtkK2pn1q9S7xYsAb3XTK-ucjpjYuBbQ3WSErvGTQezoLUuBQaB8oyHyA-gEhB_wQ6pFwCp8PJUMvxT-4-lh8r9z3P72VZWFc8dKrWGkqwKiXEUPwpfkcrGhl5MBy1JahKc0ChYlgVFQztZwF8jlI_6HBDrJHNf95b5KJDHE9H0IbqJWkT12sfM5L8i5BO_18PEEShkJAn9YFZc5BQKlwNMChSYCKzv4RrxjpeOJUoJYWaEHvHEPxcJQ4p88g89nMB35fnVtPEg" \
-            -d '{"mobile_number": "9738350592","mpin": 1234}')
-
-          # Print the entire response for debugging
-          echo "API Response: $response"
-
-          # Extract the token from the response
-          TOKEN=$(echo $response | jq -r '.data.access_token')
-
-          # Check if the token is empty
-          if [ -z "$TOKEN" ]; then
-            echo "Error: Token is empty. Please check the API response."
-            exit 1
-          fi
-
-          # Print the token for debugging (use with caution)
-          echo "Bearer Token: $TOKEN"
-
-          # Save the token to the environment for later steps
-          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
-
-      - name: Set Authentication Environment Variables
-        run: |
-          echo "ZAP_AUTH_HEADER=Authorization" >> $GITHUB_ENV
-          echo "ZAP_AUTH_HEADER_VALUE=Bearer ${{ env.TOKEN }}" >> $GITHUB_ENV
-          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/simulate" >> $GITHUB_ENV
+#      - name: Setup Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.9
+#
+#      - name: Install dependencies
+#        run: |
+#          pip install -r requirements.txt
+#
+#      - name: Test directory
+#        run: pwd
+#
+#      - name: List files
+#        run: ls
+#
+#      - name: Change directory
+#        run: cd /home/runner/work/Sound_Box_CICD/
+#
+#      - name: Run Pytest
+#        run: pytest ./TestScript/Test_app.py --html=./reports/Pytest_report.html --self-contained-html --metadata Tested "Ramesh Singh"
+#
+#      - name: Get Bearer Token
+#        id: get_token
+#        run: |
+#          # Make the API request and capture the response
+#          response=$(curl -X POST "https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets" \
+#            -H "Content-Type: application/json" \
+#            -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvSS14anVfTDRQSmhlTjk1dlVsRF9YZzBqbnhIVl8wTGpsVlVxYXRkV0FVIn0.eyJleHAiOjE3MjM4NzIyNDQsImlhdCI6MTcyMTcxMjI0NCwianRpIjoiNGU4NTExYmYtYjlkMC00N2RkLWJlNmEtZWM4MGI4NjFkNDRkIiwiaXNzIjoiaHR0cDovL2JzY3l0eHpzYzMuZXhlY3V0ZS1hcGkuYXAtc291dGgtMS5hbWF6b25hd3MuY29tL3JlYWxtcy9zb3VuZGJveCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmZjY1MTY2NC0wZTExLTQ3MmMtYTAyMS0zYWUxMjljNzM4ZGEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzb3VuZGJveC1jbGkiLCJzZXNzaW9uX3N0YXRlIjoiZDE0ZjZlN2QtNzg0NC00MjVlLWIwNWItZmNkOWIxMjI0NDI2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIvKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsImRlZmF1bHQtcm9sZXMtc291bmRib3giXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiJkMTRmNmU3ZC03ODQ0LTQyNWUtYjA1Yi1mY2Q5YjEyMjQ0MjYiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6Imd1ZXN0dXNlciJ9.SJpuuUGwUCALetYTxwWEPmtXProf2NpePNaBbrCixWbSvfpO9jUiUhM9RaO305cJZq-uOE8s7RrgtkK2pn1q9S7xYsAb3XTK-ucjpjYuBbQ3WSErvGTQezoLUuBQaB8oyHyA-gEhB_wQ6pFwCp8PJUMvxT-4-lh8r9z3P72VZWFc8dKrWGkqwKiXEUPwpfkcrGhl5MBy1JahKc0ChYlgVFQztZwF8jlI_6HBDrJHNf95b5KJDHE9H0IbqJWkT12sfM5L8i5BO_18PEEShkJAn9YFZc5BQKlwNMChSYCKzv4RrxjpeOJUoJYWaEHvHEPxcJQ4p88g89nMB35fnVtPEg" \
+#            -d '{"mobile_number": "9738350592","mpin": 1234}')
+#
+#          # Print the entire response for debugging
+#          echo "API Response: $response"
+#
+#          # Extract the token from the response
+#          TOKEN=$(echo $response | jq -r '.data.access_token')
+#
+#          # Check if the token is empty
+#          if [ -z "$TOKEN" ]; then
+#            echo "Error: Token is empty. Please check the API response."
+#            exit 1
+#          fi
+#
+#          # Print the token for debugging (use with caution)
+#          echo "Bearer Token: $TOKEN"
+#
+#          # Save the token to the environment for later steps
+#          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+#
+#      - name: Set Authentication Environment Variables
+#        run: |
+#          echo "ZAP_AUTH_HEADER=Authorization" >> $GITHUB_ENV
+#          echo "ZAP_AUTH_HEADER_VALUE=Bearer ${{ env.TOKEN }}" >> $GITHUB_ENV
+#          echo "ZAP_AUTH_HEADER_SITE=https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/payments/simulate" >> $GITHUB_ENV
 
       - name: ZAP Scan
         uses: zaproxy/action-api-scan@v0.7.0
