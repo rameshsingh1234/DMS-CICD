@@ -97,8 +97,8 @@ jobs:
         run: |
           # Download the SonarScanner version that does not bundle its own JRE
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip sonar-scanner.zip -d $HOME
-          export PATH="$HOME/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
+          unzip sonar-scanner.zip -d $HOME/sonar-scanner
+          echo "export PATH=$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin:\$PATH" >> $GITHUB_ENV
 
       - name: Run SonarQube Scanner
         env:
