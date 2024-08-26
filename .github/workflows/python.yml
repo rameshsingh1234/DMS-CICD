@@ -86,22 +86,25 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin' # Recommended distribution, you can use adopt or others as needed.
+          distribution: 'temurin'
 
       - name: Wait for SonarQube to be ready
         run: |
           echo "Waiting for SonarQube to be ready..."
           timeout 60 bash -c 'until curl -s http://localhost:9000/api/system/status | grep -q "UP"; do sleep 5; done'
 
+      - name: Download SonarScanner compatible with Java 17
+        run: |
+          # Download the SonarScanner version that does not bundle its own JRE
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner.zip -d $HOME
+          export PATH="$HOME/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
+
       - name: Run SonarQube Scanner
         env:
           SONAR_HOST_URL: http://localhost:9000
           SONAR_TOKEN: ${{ secrets.DMS_TKN }}
         run: |
-          # Download and run the SonarScanner CLI
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip sonar-scanner.zip -d $HOME
-          export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
           sonar-scanner
 
 
