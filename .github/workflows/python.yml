@@ -55,19 +55,48 @@ jobs:
         run: |
           python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
 
-  sonarcloud:
-      name: SonarCloud
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-        - name: SonarCloud Scan
-          uses: SonarSource/sonarcloud-github-action@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}  # Needed to get PR information, if any
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#  sonarcloud:
+#      name: SonarCloud
+#      runs-on: ubuntu-latest
+#      steps:
+#        - uses: actions/checkout@v3
+#          with:
+#            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+#        - name: SonarCloud Scan
+#          uses: SonarSource/sonarcloud-github-action@master
+#          env:
+#            GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}  # Needed to get PR information, if any
+#            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  sonarQube:
+    runs-on: ubuntu-latest
+
+    services:
+      sonarqube:
+        image: sonarqube:latest
+        ports:
+          - 9000:9000
+        options: --health-cmd="curl -f http://localhost:9000 || exit 1" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Wait for SonarQube to be ready
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          timeout 60 bash -c 'until curl -s http://localhost:9000/api/system/status | grep -q "UP"; do sleep 5; done'
+
+      - name: Run SonarQube Scanner
+        env:
+          SONAR_HOST_URL: http://localhost:9000
+          SONAR_TOKEN: ${{ secrets.DMS_TKN }}
+        run: |
+          # Download and run the SonarScanner CLI
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner.zip -d $HOME
+          export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
+          sonar-scanner
 
 
 
