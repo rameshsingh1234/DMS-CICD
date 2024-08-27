@@ -121,7 +121,7 @@ jobs:
           unzip -q -o sonar-scanner-cli.zip
           mv sonar-scanner-4.8.0.2856-linux sonar-scanner
           export PATH="$PATH:${PWD}/sonar-scanner/bin"
-          shell: bash
+        shell: bash
 
       - name: Run SonarQube Scan
         env:
