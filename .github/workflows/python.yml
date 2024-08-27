@@ -88,14 +88,14 @@ jobs:
 
       - name: Pull SonarQube Docker image
         run: |
-          docker pull ramesh2428/sonarqube-custom:latest
+          docker pull ramesh2428/sonarqube:9.0-java17
 
       - name: Run SonarQube Docker container with Java 17
         run: |
           docker run -d --name sonarqube -p 9000:9000 \
             -e JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
             -e PATH="/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" \
-            ramesh2428/sonarqube-custom:latest
+            amesh2428/sonarqube:9.0-java17
           echo "Waiting for SonarQube to start..."
           for i in {1..60}; do
             STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
