@@ -102,12 +102,16 @@ jobs:
             -d "login=admin&previousPassword=admin&password=${NEW_PASSWORD}"
         shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
 
-      - name: Install SonarScanner
+      - name: Install SonarQube Scanner
         run: |
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-          export PATH=$PATH:$PWD/sonar-scanner-4.8.0.2856-linux/bin
-          
+            # Download and unzip the SonarQube Scanner
+            curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+            unzip sonar-scanner-cli.zip
+            # Move the extracted directory to a known location
+            mv sonar-scanner-4.8.0.2856-linux sonar-scanner
+            # Add the scanner to the PATH
+            echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
+          shell: bash
 
       - name: Verify SonarQube Scanner Installation
         run: sonar-scanner --version
