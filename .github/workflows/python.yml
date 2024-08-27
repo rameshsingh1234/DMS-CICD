@@ -97,9 +97,10 @@ jobs:
 
       - name: Change SonarQube Admin Password
         run: |
-          NEW_PASSWORD="new_secure_password"
-          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" -d "login=admin&password=admin&newPassword=Test@2428"
-        shell: bash
+          NEW_PASSWORD="Test@2428"
+          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" \
+            -d "login=admin&previousPassword=admin&password=${NEW_PASSWORD}"
+        shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
 
       - name: Install SonarScanner
         run: |
