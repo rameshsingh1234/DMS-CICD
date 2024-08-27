@@ -59,6 +59,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -117,10 +118,14 @@ jobs:
 
       - name: Install SonarQube Scanner
         run: |
+          # Download and unzip the SonarQube Scanner
           curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner-cli.zip
+          # Move the extracted directory to a known location
           mv sonar-scanner-4.8.0.2856-linux sonar-scanner
+          # Add the scanner to the PATH
           echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
+          # Set JAVA_HOME explicitly to Java 17
           echo "JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64" >> $GITHUB_ENV
           echo "PATH=/usr/lib/jvm/temurin-17-jdk-amd64/bin:${PWD}/sonar-scanner/bin:$PATH" >> $GITHUB_ENV
         shell: bash
@@ -139,11 +144,18 @@ jobs:
       - name: Login to SonarQube and Generate Token
         id: generate_token
         run: |
+          # Use the new password to login and generate the token
           NEW_PASSWORD="Test@2428"
           TOKEN_NAME="github_actions_token"
           RESPONSE=$(curl -u admin:$NEW_PASSWORD -X POST "http://localhost:9000/api/user_tokens/generate?name=${TOKEN_NAME}")
+
+          # Extract the token from the response
           SONAR_TOKEN=$(echo $RESPONSE | jq -r '.token')
+
+          # Mask the token output in GitHub Actions logs
           echo "::add-mask::$SONAR_TOKEN"
+
+          # Set the token as an output variable
           echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_ENV
         shell: bash
 
@@ -159,40 +171,21 @@ jobs:
           -Dsonar.host.url=http://localhost:9000 \
           -Dsonar.login=$SONAR_TOKEN \
           -Dsonar.projectVersion=1.0.0 \
-          -Dsonar.language=java
+          -Dsonar.language=java # Example of additional properties
         shell: bash
 
-      - name: Generate SonarQube JSON reports
+      - name: Generate SonarQube report
         run: |
           mkdir -p sonar-reports
           curl -u $SONAR_TOKEN: http://localhost:9000/api/issues/search?componentKeys=my_project > sonar-reports/sonar-report.json
           curl -u $SONAR_TOKEN: http://localhost:9000/api/measures/component_tree?component=my_project&metricKeys=code_smells,bugs,vulnerabilities > sonar-reports/sonar-measures.json
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.x'
-
-      - name: Install Python dependencies for SonarQube HTML report
-        run: |
-          pip install sonar-report
-
-      - name: Generate SonarQube HTML report
-        run: |
-          sonar-report --input sonar-reports/sonar-report.json --output sonar-reports/sonar-report.html
-
-      - name: Upload SonarQube HTML report
-        uses: actions/upload-artifact@v3
-        with:
-          name: sonar-reports-html
-          path: sonar-reports/sonar-report.html
 
       - name: Stop SonarQube Docker container
         run: |
           docker stop sonarqube
           docker rm sonarqube
 
-      - name: Upload SonarQube JSON reports
+      - name: Upload SonarQube reports
         uses: actions/upload-artifact@v3
         with:
           name: sonar-reports
