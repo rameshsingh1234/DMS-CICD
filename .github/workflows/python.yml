@@ -126,12 +126,14 @@ jobs:
           echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
           # Set JAVA_HOME explicitly to Java 17
           echo "JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64" >> $GITHUB_ENV
-          echo "PATH=${JAVA_HOME}/bin:${PATH}" >> $GITHUB_ENV
+          echo "PATH=/usr/lib/jvm/temurin-17-jdk-amd64/bin:${PWD}/sonar-scanner/bin:$PATH" >> $GITHUB_ENV
         shell: bash
 
       - name: Verify SonarQube Scanner Installation
         run: |
+          echo "Using Java version:"
           java -version
+          echo "Using SonarQube Scanner version:"
           sonar-scanner --version
         env:
           JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
@@ -187,6 +189,7 @@ jobs:
         with:
           name: sonar-reports
           path: sonar-reports
+
 
 
 
