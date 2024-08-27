@@ -111,7 +111,7 @@ jobs:
             mv sonar-scanner-4.8.0.2856-linux sonar-scanner
             # Add the scanner to the PATH
             echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
-          shell: bash
+        shell: bash
 
       - name: Verify SonarQube Scanner Installation
         run: sonar-scanner --version
