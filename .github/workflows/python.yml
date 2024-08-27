@@ -55,6 +55,89 @@ jobs:
         run: |
           python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
 
+
+  sonarqube:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Pull SonarQube Docker image
+        run: |
+          docker pull your-dockerhub-username/sonarqube-custom:latest
+
+      - name: Run SonarQube Docker container
+        run: |
+          docker run -d --name sonarqube -p 9000:9000 your-dockerhub-username/sonarqube-custom:latest
+          # Wait for SonarQube to start
+          sleep 30
+
+      - name: Run SonarQube scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=my_project \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=$SONAR_TOKEN
+
+      - name: Generate SonarQube report
+        run: |
+          mkdir -p sonar-reports
+          curl -u $SONAR_TOKEN: http://localhost:9000/api/issues/search?componentKeys=my_project > sonar-reports/sonar-report.json
+          curl -u $SONAR_TOKEN: http://localhost:9000/api/measures/component_tree?component=my_project&metricKeys=code_smells,bugs,vulnerabilities > sonar-reports/sonar-measures.json
+
+      - name: Stop SonarQube Docker container
+        run: |
+          docker stop sonarqube
+          docker rm sonarqube
+
+      - name: Upload SonarQube reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonar-reports
+          path: sonar-reports
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #  sonarcloud:
 #      name: SonarCloud
 #      runs-on: ubuntu-latest
@@ -107,29 +190,6 @@ jobs:
 #        run: |
 #          sonar-scanner
 
-  sonarQubeScan1:
-    name: sonarQubeScan1
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarQube Scan 1
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.DMS_TKN }}  # analysis token associated to your project
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          projectBaseDir: PROJECT1_PATH/ # the path to your project from the monorepo root directory
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # We do not recommend to use this in a pull request. Prefer using pull request
-      # decoration instead.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_1 }}
 
 
 
