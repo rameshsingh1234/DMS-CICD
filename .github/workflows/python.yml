@@ -92,6 +92,8 @@ jobs:
             else
               echo "SonarQube status: $STATUS. Waiting..."
               sleep 10
+              echo "SonarQube logs:"
+              docker logs sonarqube --tail 10
             fi
           done
         shell: bash
