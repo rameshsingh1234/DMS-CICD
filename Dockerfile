@@ -1,7 +1,10 @@
-FROM sonarqube:latest
+# Use the official SonarQube 9.0 image as the base
+FROM sonarqube:9.0-community
 
-# If you need to copy any custom configuration files
-# COPY custom-configurations /opt/sonarqube/conf/
 
-# Expose necessary ports (default is 9000)
+# Set the JAVA_HOME environment variable to use Java 1
+# Expose the SonarQube port
 EXPOSE 9000
+
+# Entry point to start SonarQube
+ENTRYPOINT ["./bin/run.sh"]
