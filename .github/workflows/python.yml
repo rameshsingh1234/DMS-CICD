@@ -84,7 +84,7 @@ jobs:
         run: |
           docker run -d --name sonarqube -p 9000:9000 ramesh2428/sonarqube-custom:latest
           echo "Waiting for SonarQube to start..."
-          for i in {1..60}; do  # Increased to 60 iterations for longer wait
+          for i in {1..60}; do
             STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
             if [ "$STATUS" == "UP" ]; then
               echo "SonarQube is up and running!"
@@ -92,16 +92,13 @@ jobs:
             else
               echo "SonarQube status: $STATUS. Waiting..."
               sleep 10
-              echo "SonarQube logs:"
-              docker logs sonarqube --tail 10
             fi
           done
-          
-          echo "Detailed SonarQube logs:"
-          docker exec sonarqube cat /opt/sonarqube/logs/sonar.log
-          docker exec sonarqube cat /opt/sonarqube/logs/web.log
-          docker exec sonarqube cat /opt/sonarqube/logs/es.log
-          docker exec sonarqube cat /opt/sonarqube/logs/ce.log
+
+      - name: Change SonarQube Admin Password
+        run: |
+          NEW_PASSWORD="new_secure_password"
+          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" -d "login=admin&password=admin&newPassword=Test@2428"
         shell: bash
 
       - name: Install SonarScanner
@@ -113,10 +110,11 @@ jobs:
       - name: Login to SonarQube and Generate Token
         id: generate_token
         run: |
-          # Login and generate the token
+          # Use the new password to login and generate the token
+          NEW_PASSWORD="Test@2428"
           TOKEN_NAME="github_actions_token"
-          RESPONSE=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate?name=${TOKEN_NAME}")
-          
+          RESPONSE=$(curl -u admin:$NEW_PASSWORD -X POST "http://localhost:9000/api/user_tokens/generate?name=${TOKEN_NAME}")
+
           # Extract the token from the response
           SONAR_TOKEN=$(echo $RESPONSE | jq -r '.token')
 
@@ -127,23 +125,17 @@ jobs:
           echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_ENV
         shell: bash
 
-      - name: Install SonarQube Scanner
-        run: |
-          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-          unzip -q -o sonar-scanner-cli.zip
-          mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-          echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
-        shell: bash
-
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         run: |
-            sonar-scanner \
-            -Dsonar.projectKey=my_project \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=$SONAR_TOKEN
+          sonar-scanner \
+          -Dsonar.projectKey=my_project \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://localhost:9000 \
+          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.projectVersion=1.0.0 \
+          -Dsonar.language=java # Example of additional properties
         shell: bash
 
       - name: Generate SonarQube report
@@ -162,6 +154,7 @@ jobs:
         with:
           name: sonar-reports
           path: sonar-reports
+
 
 
 
