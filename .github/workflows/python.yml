@@ -118,7 +118,7 @@ jobs:
       - name: SonarQube Scan 1
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_1 }}  # analysis token associated to your project
+          SONAR_TOKEN: ${{ secrets.DMS_TKN }}  # analysis token associated to your project
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           projectBaseDir: PROJECT1_PATH/ # the path to your project from the monorepo root directory
