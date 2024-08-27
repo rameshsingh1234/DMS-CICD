@@ -59,6 +59,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+            java-version: '17'
+            distribution: 'temurin'  # Eclipse Temurin is a popular choice
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
