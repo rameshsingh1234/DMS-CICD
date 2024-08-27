@@ -33,8 +33,6 @@ jobs:
             -r report_html.html 
             -a
 
-
-
       - name: Attach the Zap Report To Gmail
         uses: actions/upload-artifact@v2
         with:
@@ -55,10 +53,8 @@ jobs:
         run: |
           python Utilities/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
 
-
   sonarqube:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -87,16 +83,24 @@ jobs:
       - name: Run SonarQube Docker container
         run: |
           docker run -d --name sonarqube -p 9000:9000 ramesh2428/sonarqube-custom:latest
-          # Wait for SonarQube to start
-          sleep 30
+          echo "Waiting for SonarQube to start..."
+          for i in {1..30}; do
+            STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
+            if [ "$STATUS" == "UP" ]; then
+              echo "SonarQube is up and running!"
+              break
+            else
+              echo "SonarQube status: $STATUS. Waiting..."
+              sleep 10
+            fi
+          done
+        shell: bash
 
       - name: Install SonarScanner
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner-cli-4.8.0.2856-linux.zip
           export PATH=$PATH:$PWD/sonar-scanner-4.8.0.2856-linux/bin
-          
-          
 
       - name: Login to SonarQube and Generate Token
         id: generate_token
@@ -150,6 +154,8 @@ jobs:
         with:
           name: sonar-reports
           path: sonar-reports
+
+
 
 
 
