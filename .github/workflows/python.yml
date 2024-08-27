@@ -173,30 +173,45 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Python dependencies for SonarQube HTML report
-        run: |
-          pip install sonar-report
-
       - name: Generate SonarQube HTML report
         run: |
-          sonar-report --input sonar-reports/sonar-report.json --output sonar-reports/sonar-report.html
+          python -c "
+  import json
 
-      - name: Upload SonarQube HTML report
-        uses: actions/upload-artifact@v3
-        with:
-          name: sonar-reports-html
-          path: sonar-reports/sonar-report.html
+  # Read the JSON report
+  with open('sonar-reports/sonar-report.json') as f:
+    report_data = json.load(f)
 
-      - name: Stop SonarQube Docker container
-        run: |
-          docker stop sonarqube
-          docker rm sonarqube
+  # Create a simple HTML report
+  html_report = '<html><head><title>SonarQube Report</title></head><body>'
+  html_report += '<h1>SonarQube Issues Report</h1><ul>'
 
-      - name: Upload SonarQube JSON reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: sonar-reports
-          path: sonar-reports
+  # Add data to the HTML report
+  for issue in report_data.get('issues', []):
+    html_report += f'<li>{issue["message"]} - {issue["severity"]}</li>'
+
+  html_report += '</ul></body></html>'
+
+  # Write the HTML report to a file
+  with open('sonar-reports/sonar-report.html', 'w') as f:
+  f.write(html_report)"
+
+    - name: Upload SonarQube HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: sonar-reports-html
+        path: sonar-reports/sonar-report.html
+
+    - name: Stop SonarQube Docker container
+      run: |
+        docker stop sonarqube
+        docker rm sonarqube
+
+    - name: Upload SonarQube JSON reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: sonar-reports
+        path: sonar-reports
 
 
 
