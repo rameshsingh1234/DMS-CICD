@@ -84,7 +84,7 @@ jobs:
         run: |
           docker run -d --name sonarqube -p 9000:9000 ramesh2428/sonarqube-custom:latest
           echo "Waiting for SonarQube to start..."
-          for i in {1..30}; do
+          for i in {1..60}; do  # Increased to 60 iterations for longer wait
             STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
             if [ "$STATUS" == "UP" ]; then
               echo "SonarQube is up and running!"
@@ -95,6 +95,7 @@ jobs:
               echo "SonarQube logs:"
               docker logs sonarqube --tail 10
             fi
+          done
           done
         shell: bash
 
