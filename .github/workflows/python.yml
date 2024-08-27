@@ -95,7 +95,7 @@ jobs:
           docker run -d --name sonarqube -p 9000:9000 \
             -e JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
             -e PATH="/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" \
-            amesh2428/sonarqube:9.0-java17
+            ramesh2428/sonarqube:9.0-java17
           echo "Waiting for SonarQube to start..."
           for i in {1..60}; do
             STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
