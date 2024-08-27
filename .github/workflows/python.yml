@@ -120,15 +120,14 @@ jobs:
           curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip -q -o sonar-scanner-cli.zip
           mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-          export PATH="$PATH:${PWD}/sonar-scanner/bin"
+          echo "${PWD}/sonar-scanner/bin" >> $GITHUB_PATH
         shell: bash
 
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
-          PATH: ${{ env.PATH }}
         run: |
-          sonar-scanner \
+            sonar-scanner \
             -Dsonar.projectKey=my_project \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9000 \
