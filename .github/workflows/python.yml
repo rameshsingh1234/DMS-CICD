@@ -82,11 +82,11 @@ jobs:
 
       - name: Pull SonarQube Docker image
         run: |
-          docker pull your-dockerhub-username/sonarqube-custom:latest
+          docker pull ramesh2428/sonarqube-custom:latest
 
       - name: Run SonarQube Docker container
         run: |
-          docker run -d --name sonarqube -p 9000:9000 your-dockerhub-username/sonarqube-custom:latest
+          docker run -d --name sonarqube -p 9000:9000 ramesh/sonarqube-custom:latest
           # Wait for SonarQube to start
           sleep 30
 
