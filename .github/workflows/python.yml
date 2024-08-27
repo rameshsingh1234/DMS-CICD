@@ -126,6 +126,7 @@ jobs:
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          PATH: ${{ env.PATH }}
         run: |
           sonar-scanner \
             -Dsonar.projectKey=my_project \
