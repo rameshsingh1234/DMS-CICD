@@ -86,7 +86,7 @@ jobs:
 
       - name: Run SonarQube Docker container
         run: |
-          docker run -d --name sonarqube -p 9000:9000 ramesh/sonarqube-custom:latest
+          docker run -d --name sonarqube -p 9000:9000 ramesh2428/sonarqube-custom:latest
           # Wait for SonarQube to start
           sleep 30
 
