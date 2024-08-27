@@ -62,9 +62,9 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-            java-version: '17'
-            distribution: 'temurin'  # or adopt, zulu, etc., depending on your preference
-            check-latest: true
+          java-version: '17'
+          distribution: 'temurin'
+          check-latest: true
 
       - name: Verify Java Version
         run: java -version
@@ -112,17 +112,6 @@ jobs:
             -d "login=admin&previousPassword=admin&password=${NEW_PASSWORD}"
         shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Verify Java Version
-        run: |
-          java -version
-          javac -version
-
       - name: Install SonarQube Scanner
         run: |
           # Download and unzip the SonarQube Scanner
@@ -159,10 +148,6 @@ jobs:
           echo "SONAR_TOKEN=$SONAR_TOKEN" >> $GITHUB_ENV
         shell: bash
 
-      - name: Verify SonarQube Scanner Installation
-        run: sonar-scanner --version
-        shell: bash
-
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
@@ -192,6 +177,7 @@ jobs:
         with:
           name: sonar-reports
           path: sonar-reports
+
 
 
 
