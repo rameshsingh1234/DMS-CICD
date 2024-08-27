@@ -90,9 +90,12 @@ jobs:
         run: |
           docker pull ramesh2428/sonarqube-custom:latest
 
-      - name: Run SonarQube Docker container
+      - name: Run SonarQube Docker container with Java 17
         run: |
-          docker run -d --name sonarqube -p 9000:9000 -e JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 -e PATH="/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" ramesh2428/sonarqube-custom:latest
+          docker run -d --name sonarqube -p 9000:9000 \
+            -e JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
+            -e PATH="/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH" \
+            ramesh2428/sonarqube-custom:latest
           echo "Waiting for SonarQube to start..."
           for i in {1..60}; do
             STATUS=$(curl -s http://localhost:9000/api/system/status | jq -r '.status')
@@ -127,7 +130,9 @@ jobs:
         shell: bash
 
       - name: Verify SonarQube Scanner Installation
-        run: sonar-scanner --version
+        run: |
+          java -version
+          sonar-scanner --version
         env:
           JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
           PATH: /usr/lib/jvm/temurin-17-jdk-amd64/bin:${{ env.PATH }}
@@ -154,6 +159,8 @@ jobs:
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
+          PATH: /usr/lib/jvm/temurin-17-jdk-amd64/bin:${{ env.PATH }}
         run: |
           sonar-scanner \
           -Dsonar.projectKey=my_project \
@@ -180,6 +187,7 @@ jobs:
         with:
           name: sonar-reports
           path: sonar-reports
+
 
 
 
