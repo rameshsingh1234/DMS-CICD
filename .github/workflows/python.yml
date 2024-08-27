@@ -88,7 +88,7 @@ jobs:
 
       - name: Pull SonarQube Docker image
         run: |
-          docker push ramesh2428/sonarqube:V10.0
+          docker pull ramesh2428/sonarqube:V10.0
 
       - name: Run SonarQube Docker container with Java 17
         run: |
