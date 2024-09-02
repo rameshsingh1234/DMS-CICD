@@ -10,7 +10,7 @@ log_file_level = INFO
 [DEFAULT]
 LogsDirectory = ../Logs
 CSVFilePath = ../Testdata/DMS_API_TestData.csv
-Base_url = https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com
+Base_url = https://npdlqpxkb7.execute-api.ap-south-1.amazonaws.com
 
 [authorization]
 auth_url = https://bscytxzsc3.execute-api.ap-south-1.amazonaws.com/user/secrets
