@@ -1,0 +1,47 @@
+Testcase ID,Testcase Type,endpoint,method,auth_required,headers,params,payload,expected_status_code,expected_response_keys,expected_responce_body
+TC_DMS_001,Postive,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""218192""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"status,message","{
+    ""status"": 200,
+    ""message"": ""Payment record created successfully""
+}"
+TC_DMS_001_A,Negative,/switch2/,POST,FALSE,"{""Content-Type"":""application/json""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",404,"message,error,statusCode","{
+    ""message"": ""Cannot POST /switch2/"",
+    ""error"": ""Not Found"",
+    ""statusCode"": 404
+}"
+TC_DMS_001_B,Negative,/switch2/pnotif,GET,FALSE,"{""Content-Type"":""application/json""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",404,"message,error,statusCode","{
+    ""message"": ""Cannot GET /switch2/pnotif"",
+    ""error"": ""Not Found"",
+    ""statusCode"": 404
+}"
+TC_DMS_001_C,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""abc""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""DID Id must be Integer""]}"
+TC_DMS_001_D,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""abc"", ""did"":""218192""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""IID Id must be Integar""]}"
+TC_DMS_001_E,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":"""", ""did"":""218192""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""IID cannot be empty""]}"
+TC_DMS_001_F,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""DID cannot be empty""]}"
+TC_DMS_001_G,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"",""iid"":""199"",""did"":""56834""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""Invalid DID and IID""]}"
+TC_DMS_001_H,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"",""did"":""""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""IID is reuired']"
+TC_DMS_001_I,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197""}",,"{
+    ""data"": ""VSpCIOGSI3DX/16Os0QOaYdTBA4oZ9Sut+KELT4V1B/Xr60DQ3pnFnE81JKND0x8z5iLUoOyNzllRjNTijdTSclYiTtBVnjgkxDd8poWhGrjMzeIk8G0MUtwrQSu683Fpm+lNHjSODAKBuw7tek8eJZ03YU""
+}",200,"code,message","{""code"": 1000, ""message"": [""DID and IID is required]}"
+TC_DMS_001_J,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""""}",,{},200,"code,message","{""code"": 1000, ""message"": [""request body json cannot be empty]}"
+TC_DMS_001_K,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""""}",,,200,"code,message","{""code"": 1000, ""message"": [""request body is required]}"
+TC_DMS_001_L,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""""}",,6176398603168028,200,"code,message","{""code"": 1000, ""message"": [""request body  cannot be  an integer]}"
+TC_DMS_001_M,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json"", ""iid"":""197"", ""did"":""""}",,"""asdagdjgajdgja""",200,"code,message","{""code"": 1000, ""message"": [""request body  cannot be  an string]}"
+TC_DMS_001_N,Negative,/switch2/pnotif,POST,FALSE,"{""Content-Type"":""application/json""}",,,200,"code,message","{""code"": 1000, ""message"": [""IID, DID and request body is required }"
